@@ -1,6 +1,5 @@
 ---
 layout: default
 ---
-# Hello Word!
-
-![peloto](https://github.com/RoboticsURJC-students/2019-phd-alberto-martin/blob/master/docs/logo.png)
+# Alberto Martín's PhD student
+[Reinforcement Learning state of the art](./_site/rl-state-art-md)
