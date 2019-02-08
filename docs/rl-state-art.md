@@ -47,7 +47,7 @@ that action is selected; let us call this the *value* of that action. We denote 
 step t as A_{t}, and the corresponding reward as R_{t}. The value then of an arbitrary action a, denoted
 q_{∗}(a), is the expected reward given that a is selected:
 
-[//]:![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20q_%7B*%7D%28a%29%5Cdoteq%20%5Cmathbb%7BE%7D%5BR_%7Bt%7D%20%7C%20A_%7Bt%7D%20%3D%20a%5D)
+![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20q_%7B*%7D%28a%29%5Cdoteq%20%5Cmathbb%7BE%7D%5BR_%7Bt%7D%20%7C%20A_%7Bt%7D%20%3D%20a%5D)
 
 If you knew the value of each action, then it would be trivial to solve the *k*-armed bandit problem: you
 would always select the action with highest value. We assume that you do not know the action values
@@ -64,7 +64,7 @@ expected reward on the one step, but exploration may produce the greater total r
 ### Action-Value Function
 The expected payoff or expected reward can also be called an action-value function. It is represented by Q(a) and defines the average reward for each action at *a* time *t*.
 
-[//]:![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20Q_%7Bt%7D%28a%29%20%3D%20%5Cmathbb%7BE%7D%5BR%7CA%5D)
+![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20Q_%7Bt%7D%28a%29%20%3D%20%5Cmathbb%7BE%7D%5BR%7CA%5D)
 
 #### References:
 [Reinforcement Learning Guide: Solving the Multi-Armed Bandit Problem from Scratch in Python](https://www.analyticsvidhya.com/blog/2018/09/reinforcement-multi-armed-bandit-scratch-python/)
