@@ -1,24 +1,75 @@
 ---
 layout: default
 ---
-# Reinforcement Learning State of the Art
+# Reinforcement Learning
 [Sutton & Barto Book](http://incompleteideas.net/book/bookdraft2017nov5.pdf)
 1. **Tabular Solutions Methods**: the methods can often find exact solutions, that is, they can often find exactly the optimal value function and the optimal policy.
-
  * **Multi-armed Bandits**: special case with only a single state
-
  * **Finite Markov Decision Processes**: general problem formulation for Reinforcement Learning problems.
-
  * **Dynamic Programming**: method to solve FMDP. Needs a model of environment.
-
  * **Monte Carlo Methods**: method to solve FMDP. Model not required, conceptually simple but are not well suited for step-by-step incremental computation.
-
  * **Temporal-Difference Learning**: method to solve FMDP. Model not required and are fully incremental, but are more complex to analyze.
+2. **Approximate Solution Methods**: in such cases we cannot expect to find an optimal policy or the optimal value function even in the limit of infinite time and data; our goal instead is to find a good approximate solution using limited computational resources.
+  * **On-policy Prediction with Approximation**
+  * **On-policy Control with Approximation**
+  * **On-policy Methods with Approximation**
+  * **Eligibility Traces**
+  * **Policy Gradient Methods**
 
-2. **Approximate Solution Methods**
+[2017- A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/pdf/1708.05866.pdf)
+[\\]:https://spinningup.openai.com/en/latest/spinningup/keypapers.html
+[\\]: https://medium.com/@yuxili/resources-for-deep-reinforcement-learning-a5fdf2dc730f
+Classical methods:
+  * **value-function**:
+    * [Q-learning](http://www.cs.rhul.ac.uk/~chrisw/new_thesis.pdf)
+    * SARSA
+  * **policy search**:
+    * policy gradient
+    * actor-critic methods
 
+Deep Learning methods:
+* **value-function**:
+  * DQN
+    * [Playing Atari with Deep Reinforcement Learning](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf)
+    * [Human-level control through deep reinforcement learning](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf)
+    * [Rainbow: Combining Improvements in Deep Reinforcement Learning](https://arxiv.org/pdf/1710.02298.pdf)
+    * [Priority Experience Replay](https://arxiv.org/pdf/1511.05952.pdf)
+    * [Dueling Network Architecture for Deep Reinforcement Learning](https://arxiv.org/pdf/1511.06581.pdf)
+  * Double-Q
+    * [Deep Reinforcement Learning with Double Q-Learning](https://www.aaai.org/ocs/index.php/AAAI/AAAI16/paper/viewFile/12389/11847)
+  * Categorical DQN
+    * [A Distributional Perspective on Reinforcement Learning](https://arxiv.org/pdf/1707.06887.pdf)
+  * NAF (Normalised Advantage Function)
+    * [Continuos Deep Q-Learning with Model-based Acceleration](https://arxiv.org/pdf/1603.00748.pdf)
+* **policy search** ([End-to-End Training of Deep Visuomotor Policies](https://arxiv.org/pdf/1504.00702.pdf)):
+  * GPS ([Guided Policy Search](https://graphics.stanford.edu/projects/gpspaper/gps_full.pdf))
+  * TRPO ([Trust Region Policy Optimization](https://arxiv.org/pdf/1502.05477.pdf))
+  * GAE ([Generasiled Advantage Estimation](https://arxiv.org/pdf/1506.02438.pdf))
+  * SVG ([Stochastic Value Gradients](https://arxiv.org/pdf/1510.09142.pdf))  
+  * Action-Critic methods ([Visual Navigation in Indoor Scenes](https://arxiv.org/pdf/1512.01693.pdf)):
+    * DPG ([Deterministic Policy Gradients](https://arxiv.org/pdf/1506.02438.pdf))
+    * IPG ([Interpolated Policy Gradients](https://arxiv.org/pdf/1706.00387.pdf))
+    * [A3C](https://arxiv.org/pdf/1602.01783.pdf), A2C
 
-## Multi-armed Bandits
+Current research & challenges:
+* **Model-based RL**: the key idea behind model-based RL is to learn a transition model that allows for simulation of the environment without interacting with the environment directly.
+  * [Deep Spatial Autoencoders for Visuomotor Learning](https://arxiv.org/pdf/1509.06113.pdf)
+* **Exploration vs. Exploitation**: one of the greatest difficulties in RL is the fundamental dilemma of exploration versus exploitation: When should the agent try out (perceived) non-optimal actions in order to explore the environment (and potentially improve the model), and when should it exploit the optimal action in order to make useful progress?
+* **Hierarchical RL**: In the same way that deep learning relies on hierarchies of features, HRL relies on hierarchies of policies.
+* **Imitation Learning and Inverse RL**:
+  * [ALVINN](https://papers.nips.cc/paper/95-alvinn-an-autonomous-land-vehicle-in-a-neural-network.pdf)
+  * [A Survey of Inverse Reinforcement Learning](https://arxiv.org/pdf/1806.06877.pdf)
+* **Memory and attention **:
+  * [Deep Recurrent Q-network DQRN](https://arxiv.org/pdf/1507.06527.pdf)
+  * [Deep Attention Recurrent Q-network](https://arxiv.org/pdf/1512.01693.pdf)
+* **Transfer Learning**:  
+* **Benchmarks**: one of the challenges in any field in machine learning is developing a standardised way to evaluate new techniques.
+
+[2018 - An Introduction to Deep Reinforcement Learning](https://arxiv.org/pdf/1811.12560.pdf)
+
+[2018 - Deep Reinforcement Learning for robotic manipulation-the state of the art](https://arxiv.org/pdf/1701.08878.pdf)
+## Definitions
+### Multi-armed Bandits
 [//]: https://www.analyticsvidhya.com/blog/2018/09/reinforcement-multi-armed-bandit-scratch-python/
 
 A one-armed bandit is a simple slot machine wherein you insert a coin into the machine, pull a lever, and get an immediate reward. A multi-armed bandit is a complicated slot machine wherein instead of 1, there are several levers which a gambler can pull, with each lever giving a different return.  The probability distribution for the reward corresponding to each lever is different and is unknown to the gambler.
