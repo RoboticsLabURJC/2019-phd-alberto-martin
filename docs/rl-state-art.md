@@ -17,7 +17,8 @@ layout: default
   * **Policy Gradient Methods**
 
 [2017- A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/pdf/1708.05866.pdf)
-[\\]:https://spinningup.openai.com/en/latest/spinningup/keypapers.html
+
+[\\]: https://spinningup.openai.com/en/latest/spinningup/keypapers.html
 [\\]: https://medium.com/@yuxili/resources-for-deep-reinforcement-learning-a5fdf2dc730f
 Classical methods:
   * **value-function**:
@@ -59,7 +60,7 @@ Current research & challenges:
 * **Imitation Learning and Inverse RL**:
   * [ALVINN](https://papers.nips.cc/paper/95-alvinn-an-autonomous-land-vehicle-in-a-neural-network.pdf)
   * [A Survey of Inverse Reinforcement Learning](https://arxiv.org/pdf/1806.06877.pdf)
-* **Memory and attention **:
+* **Memory and attention**:
   * [Deep Recurrent Q-network DQRN](https://arxiv.org/pdf/1507.06527.pdf)
   * [Deep Attention Recurrent Q-network](https://arxiv.org/pdf/1512.01693.pdf)
 * **Transfer Learning**:  
