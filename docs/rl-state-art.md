@@ -132,6 +132,8 @@ The task is to identify which lever to pull in order to get maximum reward after
 
 [OpenAI Spinning Up - rl introduction](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html)
 
+[Course:CPSC522/Markov Decision Process](https://wiki.ubc.ca/Course:CPSC522/Markov_Decision_Process)
+
 ## Blogs & Resources
 
 [Deep Reinforcement Learning: Pong from Pixels](http://karpathy.github.io/2016/05/31/rl/)
@@ -165,6 +167,10 @@ The task is to identify which lever to pull in order to get maximum reward after
 [Reinforcement Q-Learning from Scratch in Python with OpenAI Gym](https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/)
 
 [Reinforcement Learning: Introduction to Monte Carlo Learning using the OpenAI Gym Toolkit](https://www.analyticsvidhya.com/blog/2018/11/reinforcement-learning-introduction-monte-carlo-learning-openai-gym/)
+
+[Markov Decision process](https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/markov_decision_process.html)
+
+[Reinforcement Learning Demystified: Markov Decision Processes](https://towardsdatascience.com/reinforcement-learning-demystified-markov-decision-processes-part-1-bf00dda41690)
 
 ## Reinforcement Learning environments
 [OpenAI Gym](https://gym.openai.com/)
