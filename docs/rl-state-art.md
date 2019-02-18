@@ -189,6 +189,12 @@ The task is to identify which lever to pull in order to get maximum reward after
 
 [RLenv.directory](https://rlenv.directory/)
 
+[AWS DeepRacer](https://aws.amazon.com/deepracer/)
+
+[AWS DeepRace - code](https://github.com/aws-robotics/aws-robomaker-sample-application-deepracer)
+
+[AWS Object tracker with reinforcement learning](https://github.com/aws-robotics/aws-robomaker-sample-application-objecttracker)
+
 [Coach](https://github.com/NervanaSystems/coach)
 
 [Deep Mind Lab](https://github.com/deepmind/lab)
