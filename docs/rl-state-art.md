@@ -179,6 +179,14 @@ The task is to identify which lever to pull in order to get maximum reward after
 
 [OpenAI Gym Spinning Up](https://spinningup.openai.com/en/latest/index.html)
 
+[OpenAI Gym Retro](https://github.com/openai/retro)
+
+[OpenAI roboschool](https://github.com/openai/roboschool)
+
+[OpenAI rllab](https://github.com/rll/rllab)
+
+[garage](https://github.com/rlworkgroup/garage)
+
 [RLenv.directory](https://rlenv.directory/)
 
 [Coach](https://github.com/NervanaSystems/coach)
