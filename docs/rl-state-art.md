@@ -66,8 +66,9 @@ Deep Learning methods:
       * [Soft actor-critic](https://sites.google.com/view/sac-and-applications)
       * [Q-Prop](https://arxiv.org/pdf/1611.02247.pdf)
       * [ACKTR](https://arxiv.org/pdf/1708.05144.pdf)
-* **Model-based methods**: Neural networks or Gaussian processes for representing dynamics, advanced optimal control for planning.
+* **Model-based methods**: the agent has access to (or learns) a model of the environment. By a model of the environment, we mean a function which predicts state transitions and rewards. The main downside is that a ground-truth model of the environment is usually not available to the agent. If an agent wants to use a model in this case, it has to learn the model purely from experience.
   * [One-Shot Learning of Manipulation Skills with Online Dynamics Adaptation and Neural Network Priors](https://arxiv.org/pdf/1509.06841.pdf)
+  * [Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm](https://arxiv.org/pdf/1712.01815.pdf)
 
 Current research & challenges:
 * **Model-based RL**: the key idea behind model-based RL is to learn a transition model that allows for simulation of the environment without interacting with the environment directly.
@@ -109,6 +110,42 @@ The task is to identify which lever to pull in order to get maximum reward after
 
 [Reinforcement Learning Guide: Solving the Multi-Armed Bandit Problem from Scratch in Python](https://www.analyticsvidhya.com/blog/2018/09/reinforcement-multi-armed-bandit-scratch-python/)
 
+### Agent-environment
+![Agent-environment interaction loop](rl_diagram.png "Agent-environment interaction loop")
+
+The main characters of RL are the agent and the environment. The environment is the world that the agent lives in and interacts with. At every step of interaction, the agent sees a (possibly partial) observation of the state of the world, and then decides on an action to take. The environment changes when the agent acts on it, but may also change on its own.
+
+The agent also perceives a reward signal from the environment, a number that tells it how good or bad the current world state is. The goal of the agent is to maximize its cumulative reward, called return. Reinforcement learning methods are ways that the agent can learn behaviors to achieve its goal.
+
+### States and Observations
+A state s is a complete description of the state of the world. There is no information about the world which is hidden from the state. An observation o is a partial description of a state, which may omit information.
+
+### Action Spaces
+
+Different environments allow different kinds of actions. The set of all valid actions in a given environment is often called the action space. Some environments, like Atari and Go, have discrete action spaces, where only a finite number of moves are available to the agent. Other environments, like where the agent controls a robot in a physical world, have continuous action spaces. In continuous spaces, actions are real-valued vectors.
+
+### Policies
+
+A policy is a rule used by an agent to decide what actions to take. It can be deterministic, in which case it is usually denoted by mu or it may be stochastic, in which case it is usually denoted by pi.
+
+### Trajectories
+A trajectory T is a sequence of states and actions in the world.
+
+### Reward and Return
+
+The reward function R is critically important in reinforcement learning. It depends on the current state of the world, the action just taken, and the next state of the world although frequently this is simplified to just a dependence on the current state, rt = R(st), or state-action pair rt = R(st,at).
+
+The goal of the agent is to maximize some notion of cumulative reward over a trajectory.
+
+### The RL Problem
+Whatever the choice of return measure, and whatever the choice of policy, the goal in RL is to select a policy which maximizes expected return when the agent acts according to it.
+
+### Value Function
+It’s often useful to know the value of a state, or state-action pair. By value, we mean the expected return if you start in that state or state-action pair, and then act according to a particular policy forever after. Value functions are used, one way or another, in almost every RL algorithm.
+
+
+[RL Introduction](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html)
+
 [Policy Search: Methods and Applications](https://icml.cc/2015/tutorials/PolicySearch.pdf)
 
 ## Courses
@@ -132,7 +169,9 @@ The task is to identify which lever to pull in order to get maximum reward after
 
 [OpenAI Spinning Up - rl introduction](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html)
 
-[Course:CPSC522/Markov Decision Process](https://wiki.ubc.ca/Course:CPSC522/Markov_Decision_Process)
+[Course: CPSC522/Markov Decision Process (UBC)](https://wiki.ubc.ca/Course:CPSC522/Markov_Decision_Process)
+
+[Course: CS20 Tensorflow for Deep Learning Research (Stanford)](http://web.stanford.edu/class/cs20si/)
 
 ## Blogs & Resources
 
