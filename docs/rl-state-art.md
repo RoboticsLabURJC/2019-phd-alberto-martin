@@ -58,7 +58,7 @@ Deep Learning methods:
       * TRPO ([Trust Region Policy Optimization](https://arxiv.org/pdf/1502.05477.pdf))
       * GAE ([Generasiled Advantage Estimation](https://arxiv.org/pdf/1506.02438.pdf))
       * SVG ([Stochastic Value Gradients](https://arxiv.org/pdf/1510.09142.pdf))  
-    * **Actor-critic methods** ([Visual Navigation in Indoor Scenes](https://arxiv.org/pdf/1512.01693.pdf)): estimate the policy and the value function.
+    * **Actor-critic methods** ([Visual Navigation in Indoor Scenes](https://arxiv.org/pdf/1609.05143.pdf)): estimate the policy and the value function.
       * DPG ([Deterministic Policy Gradients](https://arxiv.org/pdf/1506.02438.pdf))
       * IPG ([Interpolated Policy Gradients](https://arxiv.org/pdf/1706.00387.pdf))
       * [A4C](https://openreview.net/pdf?id=rk8YHK1wG), [A3C](https://arxiv.org/pdf/1602.01783.pdf), A2C
