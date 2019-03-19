@@ -1,5 +1,5 @@
 # Open Ai Gym extension for robotics
-Inspired by [gym_gazebo](https://github.com/erlerobot/gym-gazebo), robotics_gym is a customized gym extension that includes environments for gazebo and stage simulator.
+Inspired by [gym_gazebo](https://github.com/erlerobot/gym-gazebo), gym_pyxis is a customized gym extension that includes environments for gazebo and stage simulator.
 ## Installation
 ### Requirements
 + ROS Kinetics

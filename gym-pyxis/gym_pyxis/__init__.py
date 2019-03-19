@@ -13,19 +13,19 @@ if "ROS_MASTER_URI" not in os.environ:
 # Turtlebot envs
 register(
     id='Turtlebot2LaserEnv-v0',
-    entry_point='robotics_gym.envs.gazebo.turtlebot:Turtlebot2LaserEnv',
+    entry_point='gym_pyxis.envs.gazebo.turtlebot:Turtlebot2LaserEnv',
     # More arguments here
 )
 
 register(
     id='Turtlebot3LaserEnv-v0',
-    entry_point='robotics_gym.envs.gazebo.turtlebot:Turtlebot3LaserEnv',
+    entry_point='gym_pyxis.envs.gazebo.turtlebot:Turtlebot3LaserEnv',
     # More arguments here
 )
 
 register(
     id='Turtlebot2Laser2DEnv-v0',
-    entry_point='robotics_gym.envs.gazebo.turtlebot:Turtlebot2Laser2DEnv',
+    entry_point='gym_pyxis.envs.gazebo.turtlebot:Turtlebot2Laser2DEnv',
     # More arguments here
 )
 
@@ -35,24 +35,24 @@ os.environ["GYM_ROBOTICS_TURTLEBOT_RECT_GAZEBO_WORLD_FILE"] = os.path.join(os.pa
 
 register(
     id='WorldPlayerStageEnv-v0',
-    entry_point='robotics_gym.envs.player_stage:WorldPlayerStageEnv',
+    entry_point='gym_pyxis.envs.player_stage:WorldPlayerStageEnv',
     # More arguments here
 )
 
 register(
     id='SimpleRoomsEnv-v0',
-    entry_point='robotics_gym.envs.grid_worlds:SimpleRoomsEnv',
+    entry_point='gym_pyxis.envs.grid_worlds:SimpleRoomsEnv',
     # More arguments here
 )
 
 register(
     id='CliffWalkingEnv-v0',
-    entry_point='robotics_gym.envs.grid_worlds:CliffWalkingEnv',
+    entry_point='gym_pyxis.envs.grid_worlds:CliffWalkingEnv',
     # More arguments here
 )
 
 register(
     id='WindyGridworldEnv-v0',
-    entry_point='robotics_gym.envs.grid_worlds:WindyGridworldEnv',
+    entry_point='gym_pyxis.envs.grid_worlds:WindyGridworldEnv',
     # More arguments here
 )

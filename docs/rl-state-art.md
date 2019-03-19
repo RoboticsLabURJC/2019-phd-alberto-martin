@@ -173,6 +173,10 @@ It’s often useful to know the value of a state, or state-action pair. By value
 
 [Course: CS20 Tensorflow for Deep Learning Research (Stanford)](http://web.stanford.edu/class/cs20si/)
 
+[Intro to TensorFlow for Deep Learning](https://eu.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187)
+
+[TensorFlow: From Basics to Mastery](https://www.deeplearning.ai/tensorflow-specialization/)
+
 ## Blogs & Resources
 
 [Deep Reinforcement Learning: Pong from Pixels](http://karpathy.github.io/2016/05/31/rl/)

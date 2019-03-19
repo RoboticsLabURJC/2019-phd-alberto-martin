@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
-
 import sys, os.path
+
+def parse_requirements(filename):
+    """ load requirements from a pip requirements file """
+    lineiter = (line.strip() for line in open(filename))
+    return [line for line in lineiter if line and not line.startswith("#")]
+
 install_reqs = parse_requirements('requirements.txt')
-reqs = [str(ir.req) for ir in install_reqs]
+
+reqs = [ir for ir in install_reqs]
 
 
 # Don't import gym module here, since deps may not be installed
