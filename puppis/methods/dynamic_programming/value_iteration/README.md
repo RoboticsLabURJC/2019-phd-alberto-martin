@@ -1,4 +1,4 @@
-#Environment
+# Environment
 
 |   Map    |
 |----------|
@@ -39,7 +39,7 @@ Solving the MDP implies finding the optimal policies:
 
 We represent the value function and Q function using the Bellman Optimality equation.
 
-#Value Iteration
+# Value Iteration
 We start off with a random value function, so we look for a new improved value function in iterative fashion until we find the optimal policy function. Once we find the optimal value function, we can easily derive an optimal policy from it.
 
 The steps involved in the value iteration are as follows:
@@ -48,13 +48,13 @@ The steps involved in the value iteration are as follows:
 3. Then we update our value function with the max value from Q(s,a).
 4. We repeat these steps until the changes in the value function is very small.
 
-#####1.Initialize the random value function
+##### 1.Initialize the random value function
 ```python
 value_table = np.zeros(gym_env.observation_space.n)
 n_iterations = 10000
 ```
 
-#####2.Compute Q function
+##### 2.Compute Q function
 ```python
 
 updated_value_table = np.copy(value_table)
@@ -69,18 +69,18 @@ for state in range(gym_env.observation_space.n):
         Q_value.append(np.sum(next_states_rewards))
 ```
 
-#####3.Update value function wit the max value from Q(s,a)
+##### 3.Update value function wit the max value from Q(s,a)
 ```python
 value_table[state] = max(Q_value)
 ```
 
-#####4.Repeat steps until changes in the value function is very small
+##### 4.Repeat steps until changes in the value function is very small
 ```python
 if np.sum(np.fabs(updated_value_table - value_table)) <= threshold:
     print('Value-iteration converged at iteration# {}'.format((i+1)))
 ```
 
-###Results
+### Results
 
 ```python
 if __name__ == '__main__':
@@ -96,7 +96,7 @@ Value-iteration converged at iteration# 1373
 Value-iteration converged at iteration# 10000
 [0. 3. 3. 3. 0. 0. 0. 0. 3. 1. 0. 0. 0. 2. 1. 0.]
 ```
-#####Optimal policy
+##### Optimal policy
 
 |          Map             |
 |--------------------------|
@@ -106,21 +106,21 @@ Value-iteration converged at iteration# 10000
 | H     F       F       G  |
 
 Actions to be performed in each state.
-######Gamma=1
+###### Gamma=1
 ```python
 [LEFT   UP      UP      UP 
  LEFT   LEFT    LEFT    LEFT 
  UP     DOWN    LEFT    LEFT 
  LEFT   RIGHT   DOWN    LEFT]
 ```
-######Gamma=0.5
+###### Gamma=0.5
 ```python
 [DOWN   UP      RIGHT      UP 
  LEFT   LEFT    LEFT    LEFT 
  UP     DOWN    LEFT    LEFT 
  LEFT   RIGHT   DOWN    LEFT]
 ```
-######Gamma=0
+###### Gamma=0
 ```python
 [LEFT   LEFT   LEFT    LEFT 
  LEFT   LEFT   LEFT    LEFT 
