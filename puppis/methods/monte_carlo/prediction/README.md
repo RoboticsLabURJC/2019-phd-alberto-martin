@@ -1,4 +1,4 @@
-#Monte Carlo Prediction
+# Monte Carlo Prediction
 In Monte Carlo prediction we approximate the value function by taking the mean return instead of the expected return. We can estimate the value function of any given policy.
 
 Steps:

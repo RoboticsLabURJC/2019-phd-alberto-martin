@@ -1,4 +1,4 @@
-#Monte Carlo methods
+# Monte Carlo methods
 
 The Monte Carlo methods finds approximate solutions through random sampling, that is, it approximate the probability of an outcome by running multiple trails.
 
