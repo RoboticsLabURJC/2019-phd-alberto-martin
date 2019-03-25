@@ -24,3 +24,14 @@ Is a technique for solving complex problems. Instead of solving complex problems
 We solve a Bellman equation using two algorithms:
 * Value Iteration
 * Policy Iteration
+
+## Value Iteration vs Policy Iteration
+Value Iteration is the result of directly applying the optimal Bellman operator to the value function in a recursive manner, so that it converges to the optimal value. Then, we get the optimal policy as the one that is greedy with respect to the original value function for every state.
+
+On the other hand, Policy Iteration performs two steps at each iteration of the main outer loop:
+1. Policy evaluation: apply the Bellman operator for the current best policy in a recursive manner until convergence to the value function for such policy.
+2. Policy improvement: then, improvement the current policy by tacking the action that maximizes the value function for every state.
+
+Both of these techniques transition and reward probabilities to find the optimal policy. 
+
+[How is policy iteration different from value iteration](https://www.quora.com/How-is-policy-iteration-different-from-value-iteration)
