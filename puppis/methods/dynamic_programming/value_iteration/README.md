@@ -6,6 +6,7 @@
 | F H F H  |
 | F F F H  |
 | H F F G  |
+
 Where:
 * S: starting point (safe).
 * F: frozen surface (safe).

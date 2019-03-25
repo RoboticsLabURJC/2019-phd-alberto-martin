@@ -6,6 +6,7 @@
 | F H F H  |
 | F F F H  |
 | H F F G  |
+
 Where:
 * S: starting point (safe).
 * F: frozen surface (safe).
@@ -53,20 +54,56 @@ The steps involved in the policy iteration are as follow:
 4. We repeat these steps until we find an optimal policy.
 
 
+##### 1.Initialize the random policy
+```python
+random_policy = np.zeros(gym_env.observation_space.n)
+iterations = 200000
+```
+
+##### 2.Find the value function for random policy
+```python
+updated_value_table = np.copy(value_table)
+    for state in range(env.env.nS):
+        action = policy[state]
+
+        value_table[state] = sum([trans_prob * (reward_prob + gamma * updated_value_table[next_state])
+                                  for trans_prob, next_state, reward_prob, _ in gym_env.env.P[state][action]])
+```
+
+##### 3.Improve policy
+```python
+policy = np.zeros(gym_env.observation_space.n)
+for state in range(gym_env.observation_space.n):
+    Q_table = np.zeros(gym_env.action_space.n)
+    for action in range(gym_env.action_space.n):
+        for next_sr in gym_env.env.P[state][action]:
+            trans_prob, next_state, reward_prob, _ = next_sr
+            Q_table[action] += (trans_prob * (reward_prob + gamma * value_table[next_state]))
+
+    policy[state] = np.argmax(Q_table)
+
+return policy
+```
+
+##### 4.Repeat these steps until we find an optimal policy
+```python
+if np.all(random_policy == new_policy):
+    print('Policy iteration converged at step {}.'.format(i+1))
+    break
+random_policy = new_policy
+```
+
 ### Results
 
 ```python
 if __name__ == '__main__':
     env = gym.make('FrozenLake-v0')
-    optimal_value_function = value_itearation(env, 1.0)
-    optimal_policy = extract_policy(env, optimal_value_function, 1.0)
-    print(optimal_policy)
+    result = policy_iteration(env, 1.0)
+    print(result)
 ```
 
 ```python
-Value-iteration converged at iteration# 1373
-...
-Value-iteration converged at iteration# 10000
+Policy iteration converged at step 7.
 [0. 3. 3. 3. 0. 0. 0. 0. 3. 1. 0. 0. 0. 2. 1. 0.]
 ```
 ##### Optimal policy
