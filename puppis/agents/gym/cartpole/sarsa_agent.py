@@ -3,7 +3,7 @@ import gym
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from puppis.methods.sarsa import SARSA
+from puppis.methods.temporal_difference.control.on_policy.sarsa import SARSA
 
 
 if __name__ == "__main__":

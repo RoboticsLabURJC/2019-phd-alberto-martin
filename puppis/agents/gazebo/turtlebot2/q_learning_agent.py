@@ -1,6 +1,5 @@
 import os
 import gym
-import gym_pyxis
 from gym_pyxis.envs import specs
 import numpy as np
 import seaborn as sns

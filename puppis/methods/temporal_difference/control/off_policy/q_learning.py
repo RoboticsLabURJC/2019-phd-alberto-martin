@@ -1,6 +1,7 @@
 import numpy as np
 from collections import defaultdict
 
+
 class QLearning(object):
 
     def __init__(self, actions, epsilon=0.01, alpha=0.5, gamma=1):

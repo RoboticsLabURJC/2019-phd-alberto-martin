@@ -1,11 +1,9 @@
 import gym
-import gym_pyxis
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import deque
-from puppis.methods.q_learning import QLearning
-
+from puppis.methods.temporal_difference.control.off_policy import QLearning
 
 if __name__ == "__main__":
     sns.set()
