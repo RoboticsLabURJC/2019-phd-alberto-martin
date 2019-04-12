@@ -16,6 +16,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class TurtlebotEnv(gazebo_env.GazeboEnv):
 
     def __init__(self):
@@ -23,7 +24,11 @@ class TurtlebotEnv(gazebo_env.GazeboEnv):
         if "TURTLEBOT3_MODEL" not in os.environ:
             self.turtlebot_version = 2
         else:
-            self.turtlebot_version = 3
+            turtlebot3_model = os.getenv('TURTLEBOT3_MODEL', 'burger')
+            if 'waffle_pi' == turtlebot3_model:
+                self.turtlebot_version = 3.14
+            else:
+                self.turtlebot_version = 3
 
         if 'launchfile' in specs.environment_specs:
             if os.path.exists(specs.environment_specs.launchfile):
@@ -36,16 +41,15 @@ class TurtlebotEnv(gazebo_env.GazeboEnv):
                 raise ValueError(msg)
         else:
             if self.turtlebot_version == 2:
-                launchfile = "/opt/ros/kinetic/share/turtlebot_gazebo/launch/turtlebot_world.launch"
+                launchfile = "/opt/ros/melodic/share/turtlebot_gazebo/launch/turtlebot_world.launch"
             else:
-                launchfile = "/opt/ros/kinetic/share/turtlebot3_gazebo/launch/turtlebot3_world.launch"                
+                launchfile = "/opt/ros/melodic/share/turtlebot3_gazebo/launch/turtlebot3_world.launch"
 
         if 'port' in specs.environment_specs:
             port = specs.environment_specs.port
             gazebo_env.GazeboEnv.__init__(self, launchfile, port)
         else:
             gazebo_env.GazeboEnv.__init__(self, launchfile)
-
 
         if self.turtlebot_version == 3:
             self.vel_pub_service = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
@@ -102,6 +106,7 @@ class TurtlebotEnv(gazebo_env.GazeboEnv):
                 image_data = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=timeout)
                 cv_image = CvBridge().imgmsg_to_cv2(image_data, "bgr8")
             except Exception as e:
+                print('exception raised: {}'.format(e))
                 logger.warning("TurtlebotEnv: exception raised getting camera data {}".format(e))
 
         return cv_image
@@ -116,8 +121,8 @@ class TurtlebotEnv(gazebo_env.GazeboEnv):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def _reset(self):
+    def reset(self):
         raise NotImplementedError
 
-    def _step(self, action):
+    def step(self, action):
         raise NotImplementedError

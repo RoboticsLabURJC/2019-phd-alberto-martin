@@ -1,7 +1,7 @@
 import numpy as np
 from gym import spaces
+from gym_pyxis.envs.gazebo.turtlebot import turtlebot_env
 
-import turtlebot_env
 
 class Turtlebot2LaserEnv(turtlebot_env.TurtlebotEnv):
 

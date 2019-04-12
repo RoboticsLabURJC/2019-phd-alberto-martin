@@ -9,6 +9,7 @@ import matplotlib.animation as animation
 
 """ From edx.org Reinforcement Learning Explained (DAT257x) course """
 
+
 class SimpleRoomsEnv(gym.Env):
 
     """Define a simple 4-room environment"""

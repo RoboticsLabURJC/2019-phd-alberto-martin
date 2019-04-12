@@ -1,10 +1,10 @@
 <launch>
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="world_file"  default="$(env GYM_ROBOTICS_TURTLEBOT_OCTA_GAZEBO_WORLD_FILE)"/>
+  <arg name="world_file"  default="$(env GYM_ROBOTICS_TURTLEBOT_FOLLOWLINE_GAZEBO_WORLD_FILE)"/>
   <arg name="gui" default="false"/>
-  <arg name="x_pos" default="-3.00162"/>
-  <arg name="y_pos" default="-7.99707"/>
-  <arg name="z_pos" default="0.000693"/>
+  <arg name="x_pos" default="-0.001658"/>
+  <arg name="y_pos" default="-4.99739"/>
+  <arg name="z_pos" default="0.000683"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(arg world_file)"/>

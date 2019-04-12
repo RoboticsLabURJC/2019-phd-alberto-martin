@@ -1,7 +1,6 @@
 import numpy as np
 from gym import spaces
-
-import turtlebot_env
+from gym_pyxis.envs.gazebo.turtlebot import turtlebot_env
 
 class Turtlebot3LaserEnv(turtlebot_env.TurtlebotEnv):
 
@@ -9,7 +8,7 @@ class Turtlebot3LaserEnv(turtlebot_env.TurtlebotEnv):
         turtlebot_env.TurtlebotEnv.__init__(self)
 
         laser = self.get_laser_data()
-        self.observation_dims = [len(laser.ranges)]
+        self.observation_dims = len(laser.ranges)
         self.observation_space = spaces.Discrete(self.observation_dims)
         self.laser = np.zeros(self.observation_dims, np.float32)
         self.action_space = spaces.Discrete(3)
@@ -17,7 +16,7 @@ class Turtlebot3LaserEnv(turtlebot_env.TurtlebotEnv):
         self.obstacle_thresold = 0.15
         self.time_stamp = laser.scan_time
 
-    def _step(self, action):
+    def step(self, action):
         self.action2vel(action)
 
         self.update()
@@ -32,7 +31,7 @@ class Turtlebot3LaserEnv(turtlebot_env.TurtlebotEnv):
         info = {}
         return self.laser, reward, self.collision, info
 
-    def _reset(self):
+    def reset(self):
 
         self.send_velocity_command(0.0, 0.0)
         self.reset_simulation()

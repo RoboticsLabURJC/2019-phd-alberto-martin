@@ -7,6 +7,7 @@ import subprocess
 
 logger = logging.getLogger(__name__)
 
+
 class GazeboEnv(gym.Env):
 
     DEFAULT_NODE_PORT = 0  # bind to any open port
@@ -48,16 +49,16 @@ class GazeboEnv(gym.Env):
             self._close()
             sys.exit(-1)
 
-    def _step(self, action):
+    def step(self, action):
         raise NotImplementedError
 
-    def _reset(self):
+    def reset(self):
         raise NotImplementedError
 
     def _render(self, mode="human", close=False):
 
         try:
-            ps_output = subprocess.check_output(["ps", "-Af"]).strip("\n")
+            ps_output = subprocess.check_output(["ps", "-Af"]).decode('utf-8').strip("\n")
         except subprocess.CalledProcessError as ce:
             logger.warning("GazeboEnv: exception raised executing ps command {}".format(ce))
             ps_output = ''
@@ -80,7 +81,7 @@ class GazeboEnv(gym.Env):
     def _close(self):
 
         try:
-            ps_output = subprocess.check_output(["ps", "-Af"]).strip("\n")
+            ps_output = subprocess.check_output(["ps", "-Af"]).decode('utf-8').strip("\n")
         except subprocess.CalledProcessError as ce:
             logger.error("GazeboEnv: exception raised executing ps command {}".format(ce))
             sys.exit(-1)

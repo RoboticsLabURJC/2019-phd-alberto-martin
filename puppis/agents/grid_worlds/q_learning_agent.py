@@ -1,4 +1,5 @@
 import gym
+import gym_pyxis
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
