@@ -2,9 +2,15 @@
 Inspired by [gym_gazebo](https://github.com/erlerobot/gym-gazebo), gym_pyxis is a customized gym extension that includes environments for gazebo and stage simulator.
 ## Installation
 ### Requirements
-+ ROS Kinetics
++ [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) (python2)
++ sudo apt install python-catkin-tools
++ sudo apt install ros-melodic-turtlebot3
++ copy models to gazebo model path
 + Player (3.02) and Stage (4.1.1) with python support. 
 + OpenAI Gym
+
+
+[Turtlebot3 simulation](http://emanual.robotis.com/docs/en/platform/turtlebot3/simulation/#turtlebot3-simulation-using-fake-node)
 
 ## Player/Stage installation
 [How to use Player/Stage](http://player-stage-manual.readthedocs.io/en/latest/)

@@ -3,7 +3,7 @@
   <arg name="world_file"  default="$(env GYM_ROBOTICS_TURTLEBOT_FOLLOWLINE_GAZEBO_WORLD_FILE)"/>
   <arg name="gui" default="false"/>
   <arg name="x_pos" default="-0.001658"/>
-  <arg name="y_pos" default="-4.99739"/>
+  <arg name="y_pos" default="-3.8"/>
   <arg name="z_pos" default="0.000683"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">

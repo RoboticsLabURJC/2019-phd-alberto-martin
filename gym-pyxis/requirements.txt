@@ -1,4 +1,1 @@
 gym>=0.2.3
-pyyaml
-pyros_setup
-rospkg

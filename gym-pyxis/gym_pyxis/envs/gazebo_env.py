@@ -55,7 +55,7 @@ class GazeboEnv(gym.Env):
     def reset(self):
         raise NotImplementedError
 
-    def _render(self, mode="human", close=False):
+    def render(self, mode="human", close=False):
 
         try:
             ps_output = subprocess.check_output(["ps", "-Af"]).decode('utf-8').strip("\n")
@@ -78,7 +78,7 @@ class GazeboEnv(gym.Env):
             except OSError as oe:
                 logger.warning("GazeboEnv: exception raised launching gzclient {}".format(oe))
 
-    def _close(self):
+    def close(self):
 
         try:
             ps_output = subprocess.check_output(["ps", "-Af"]).decode('utf-8').strip("\n")
