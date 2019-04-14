@@ -1,6 +1,6 @@
 <launch>
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="world_file"  default="$(env GYM_ROBOTICS_TURTLEBOT_FOLLOWLINE_GAZEBO_WORLD_FILE)"/>
+  <arg name="world_file"  default="$(env GYM_ROBOTICS_TURTLEBOT_FOLLOW_LINE_GAZEBO_WORLD_FILE)"/>
   <arg name="gui" default="false"/>
   <arg name="x_pos" default="-0.001658"/>
   <arg name="y_pos" default="-3.8"/>

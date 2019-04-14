@@ -24,6 +24,9 @@ RUN apt update && apt upgrade -y && apt install -y \
         cmake \
         nano \
         sudo \
+        psmisc \
+        xorg-dev \
+        xvfb \
     && apt clean \
     && rm -rf /var/lib/apt/list/*
 
@@ -49,3 +52,13 @@ RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
     && . ~/.bashrc \
     && sudo rosdep init && rosdep update
+
+WORKDIR /home/docker
+RUN mkdir gym-pyxis && mkdir puppis
+COPY gym-pyxis gym-pyxis/
+COPY puppis puppis/
+RUN sudo chown docker:docker -R gym-pyxis && sudo chown docker:docker -R puppis
+RUN cd gym-pyxis && sudo python2 setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo
+CMD ["xvfb-run -s '-screen 0 1280x1024x24' bash"]
+
+#docker run -ti --rm -p 11311:11311 -p 11345:11345 pyxis
