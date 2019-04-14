@@ -32,7 +32,7 @@ register(
 os.environ["GAZEBO_MODEL_PATH"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'envs/gazebo/assets/models')
 os.environ["GYM_ROBOTICS_TURTLEBOT_OCTA_GAZEBO_WORLD_FILE"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'envs/gazebo/assets/worlds/turtlebot2_octa.world')
 os.environ["GYM_ROBOTICS_TURTLEBOT_RECT_GAZEBO_WORLD_FILE"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'envs/gazebo/assets/worlds/turtlebot2_rect.world')
-os.environ["GYM_ROBOTICS_TURTLEBOT_FOLLOW_LINE_GAZEBO_WORLD_FILE"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'envs/gazebo/assets/worlds/turtlebot3_followline.world')
+os.environ["GYM_ROBOTICS_TURTLEBOT_FOLLOW_LINE_GAZEBO_WORLD_FILE"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'envs/gazebo/assets/worlds/turtlebot_followline.world')
 
 register(
     id='WorldPlayerStageEnv-v0',

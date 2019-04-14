@@ -59,6 +59,7 @@ COPY gym-pyxis gym-pyxis/
 COPY puppis puppis/
 RUN sudo chown docker:docker -R gym-pyxis && sudo chown docker:docker -R puppis
 RUN cd gym-pyxis && sudo python2 setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo
-CMD ["xvfb-run -s '-screen 0 1280x1024x24' bash"]
+CMD ["bash"]
 
+# xvfb-run -s '-screen 0 1280x1024x24' /bin/bash
 #docker run -ti --rm -p 11311:11311 -p 11345:11345 pyxis

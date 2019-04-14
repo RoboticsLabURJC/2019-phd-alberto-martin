@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     #Turtlebot3
     os.environ['TURTLEBOT3_MODEL'] = "waffle_pi"
-    specs.environment_specs.launchfile = 'turtlebot_followline.launch'
+    specs.environment_specs.launchfile = 'turtlebot3_followline.launch'
     env = gym.make('Turtlebot3LaserEnv-v0')
     state = env.reset()
     time.sleep(10)
