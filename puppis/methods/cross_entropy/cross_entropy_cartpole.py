@@ -13,6 +13,7 @@ EpisodeStep = namedtuple('EpisodeStep', field_names=['observation', 'action'])
 
 
 class Net(tf.keras.Model):
+
     def __init__(self, hidden_size, obs_size, n_actions):
         super(Net, self).__init__()
         self.dense1 = tf.keras.layers.Dense(hidden_size, activation=tf.nn.relu, input_shape=(obs_size,))
@@ -21,7 +22,6 @@ class Net(tf.keras.Model):
     def call(self, input):
         result = self.dense1(input)
         result = self.dense2(result)
-
         return result
 
 
@@ -59,7 +59,9 @@ def play(net, env, iterations=1000):
         env.render()
         obs_v = tf.convert_to_tensor([obs])
         net_output = net(obs_v)
-        action = tf.argmax(net_output, axis=1, output_type=tf.int32)
+        act_probs_v = tf.nn.softmax(net_output)
+        act_probs = act_probs_v.numpy()[0]
+        action = tf.argmax(act_probs, output_type=tf.int32)
         next_obs, reward, is_done, _ = env.step(int(action.numpy()))
         episode_reward += reward
         if is_done:
