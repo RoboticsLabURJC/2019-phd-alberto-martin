@@ -10,3 +10,6 @@ The steps involved in Q learning are as follows:
 2. We take an action from a state using epsilon-greedy policy (e > 0) and move it to the new state.
 3. We update the Q value of a previous table state by following the previous rule.
 4. We repeat the steps 2 and 3 till we reach the terminal state.
+
+![](q_learning.gif)
+
