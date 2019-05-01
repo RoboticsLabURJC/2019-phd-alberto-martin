@@ -128,10 +128,10 @@ or y = r + gamma max target Q_s,a otherwise.
 An episode ends when a player reach 20 points.
 
 Reward:
-![](reward.svg)
+![](reward.jpg)
 Average reward:
-![](reward_100.svg)
+![](reward_100.jpg)
 epsilon:
-![](epsilon.svg)
+![](epsilon.jpg)
 DQN playing Pong:
 ![](dqn_pong.gif)
