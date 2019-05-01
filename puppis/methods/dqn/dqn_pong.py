@@ -122,63 +122,60 @@ if __name__ == "__main__":
     ts = time.time()
     best_mean_reward = None
 
-    with tf.device(device):
+    net = dqn_model.DQN(env.observation_space.shape, env.action_space.n)
+    tgt_net = dqn_model.DQN(env.observation_space.shape, env.action_space.n)
 
-        net = dqn_model.DQN(env.observation_space.shape, env.action_space.n)
-        tgt_net = dqn_model.DQN(env.observation_space.shape, env.action_space.n)
+    optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE)
+    global_step = tf.Variable(0)
 
-        net.summary()
+    checkpoint_dir = 'checkpoints/'
+    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+    root = tf.train.Checkpoint(optimizer=optimizer,
+                               model=net,
+                               optimizer_step=tf.train.get_or_create_global_step())
 
-        optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE)
-        global_step = tf.Variable(0)
+    while True:
+        frame_idx += 1
+        epsilon = max(EPSILON_FINAL, EPSILON_START - frame_idx / EPSILON_DECAY_LAST_FRAME)
 
-        checkpoint_dir = 'checkpoints/'
-        checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
-        root = tf.train.Checkpoint(optimizer=optimizer,
-                                   model=net,
-                                   optimizer_step=tf.train.get_or_create_global_step())
+        reward = agent.play_step(net, epsilon)
+        if reward is not None:
+            total_rewards.append(reward)
+            speed = (frame_idx - ts_frame) / (time.time() - ts)
+            ts_frame = frame_idx
+            ts = time.time()
+            mean_reward = np.mean(total_rewards[-100:])
+            print("%d: done %d games, mean reward %.3f, eps %.2f, speed %.2f f/s" % (
+                frame_idx, len(total_rewards), mean_reward, epsilon,
+                speed
+            ))
+            with writer.as_default(), tf.contrib.summary.always_record_summaries():
+                tf.contrib.summary.scalar("epsilon", epsilon)
+                tf.contrib.summary.scalar("speed", speed)
+                tf.contrib.summary.scalar("reward_100", mean_reward)
+                tf.contrib.summary.scalar("reward", reward)
 
-        while True:
-            frame_idx += 1
-            epsilon = max(EPSILON_FINAL, EPSILON_START - frame_idx / EPSILON_DECAY_LAST_FRAME)
+            if best_mean_reward is None or best_mean_reward < mean_reward:
+                root.save(checkpoint_prefix)
+                if best_mean_reward is not None:
+                    print("Best mean reward updated %.3f -> %.3f, model saved" % (best_mean_reward, mean_reward))
+                best_mean_reward = mean_reward
+            if mean_reward > args.reward:
+                print("Solved in %d frames!" % frame_idx)
+                break
 
-            reward = agent.play_step(net, epsilon)
-            if reward is not None:
-                total_rewards.append(reward)
-                speed = (frame_idx - ts_frame) / (time.time() - ts)
-                ts_frame = frame_idx
-                ts = time.time()
-                mean_reward = np.mean(total_rewards[-100:])
-                print("%d: done %d games, mean reward %.3f, eps %.2f, speed %.2f f/s" % (
-                    frame_idx, len(total_rewards), mean_reward, epsilon,
-                    speed
-                ))
-                with writer.as_default(), tf.contrib.summary.always_record_summaries():
-                    tf.contrib.summary.scalar("epsilon", epsilon)
-                    tf.contrib.summary.scalar("speed", speed)
-                    tf.contrib.summary.scalar("reward_100", mean_reward)
-                    tf.contrib.summary.scalar("reward", reward)
+        if len(buffer) < REPLAY_START_SIZE:
+            continue
 
-                if best_mean_reward is None or best_mean_reward < mean_reward:
-                    root.save(checkpoint_prefix)
-                    if best_mean_reward is not None:
-                        print("Best mean reward updated %.3f -> %.3f, model saved" % (best_mean_reward, mean_reward))
-                    best_mean_reward = mean_reward
-                if mean_reward > args.reward:
-                    print("Solved in %d frames!" % frame_idx)
-                    break
+        if frame_idx % SYNC_TARGET_FRAMES == 0:
+            tgt_net.set_weights(net.get_weights())
 
-            if len(buffer) < REPLAY_START_SIZE:
-                continue
+        batch = buffer.sample(BATCH_SIZE)
+        with tf.GradientTape() as tape:
+            loss_value = calc_loss(batch, net, tgt_net)
 
-            if frame_idx % SYNC_TARGET_FRAMES == 0:
-                tgt_net.set_weights(net.get_weights())
+        grads = tape.gradient(loss_value, net.trainable_variables)
 
-            batch = buffer.sample(BATCH_SIZE)
-            with tf.GradientTape() as tape:
-                loss_value = calc_loss(batch, net, tgt_net)
+        optimizer.apply_gradients(zip(grads, net.trainable_variables), global_step)
 
-            grads = tape.gradient(loss_value, net.trainable_variables)
-
-            optimizer.apply_gradients(zip(grads, net.trainable_variables), global_step)
     writer.close()
