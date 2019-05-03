@@ -83,27 +83,38 @@ RUN adduser --disabled-password --gecos '' docker &&\
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER docker
+WORKDIR /home/docker
+RUN sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 && \
+    sudo update-alternatives --set python /usr/bin/python3.6 && \
+    sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
+    sudo update-alternatives --set pip /usr/bin/pip3
+RUN sudo -H pip3 install -U trollius rosdep rosinstall_generator rosinstall catkin_pkg catkin-tools pyside2
+RUN sudo rosdep init && rosdep update
+RUN sudo pip3 uninstall vcstools && sudo pip3 uninstall wstool
+RUN git clone https://github.com/tkruse/vcstools &&  \
+    cd vcstools && git checkout mock_server_tar_test && \
+    sudo python3 setup.py develop && cd .. && \
+    git clone https://github.com/vcstools/wstool && \
+    cd wstool && python3 setup.py develop
 
-RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
-    sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
-    sudo apt update && \
-    sudo apt install -y ros-melodic-desktop-full && \
-    sudo apt install -y python-catkin-tools \
-        ros-melodic-turtlebot3 \
-        ros-melodic-turtlebot3-gazebo \
-        python-rosinstall \
-        python-rosinstall-generator \
-        python-wstool \
-    && sudo apt clean \
-    && sudo rm -rf /var/lib/apt/list/* \
-    && echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc \
-    && . ~/.bashrc \
-    && sudo rosdep init && rosdep update
+RUN cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
+    cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
+    cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+
+RUN cd && mkdir ~/ros_catkin_ws && cd ros_catkin_ws && \
+    rosinstall_generator desktop_full --rosdistro melodic --deps --tar > melodic-desktop-full.rosinstall && \
+    wstool init -j8 src melodic-desktop.rosinstall
+
+ENV ROS_PYTHON_VERSION 3
+RUN sudo apt install -y libgpgme-dev python3-empy libeigen3-dev python3-sip python3-sip-dev libyaml-cpp-dev libboost-python-dev unzip python3-numpy
+
+RUN rosdep install --from-paths src --ignore-src --rosdistro melodic -y && \
+    ./src/catkin/bin/catkin_make_isolated -DPYTHON_VERSION=3.6 --install -DCMAKE_BUILD_TYPE=Release && \
+    . ~/ros_catkin_ws/install_isolated/setup.bash
 
 WORKDIR /home/docker
-RUN git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel
-RUN sudo chown docker:docker -R devel
-RUN cd devel/gym-pyxis && sudo python2 setup.py install && mkdir ~/.gazebo && cp -r devel/gym_pyxis/envs/gazebo/assets/models ~/.gazebo
+RUN git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel && \
+    cd devel/gym-pyxis && sudo python setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo
 CMD ["bash"]
 
 # xvfb-run -s '-screen 0 1280x1024x24' /bin/bash
