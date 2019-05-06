@@ -88,34 +88,39 @@ RUN sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6
     sudo update-alternatives --set python /usr/bin/python3.6 && \
     sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
     sudo update-alternatives --set pip /usr/bin/pip3
-RUN sudo -H pip3 install -U trollius rosdep rosinstall_generator rosinstall catkin_pkg catkin-tools pyside2
-RUN sudo rosdep init && rosdep update
-RUN sudo pip3 uninstall vcstools && sudo pip3 uninstall wstool
-RUN git clone https://github.com/tkruse/vcstools &&  \
+
+RUN sudo -H pip3 install -U trollius rosdep rosinstall_generator rosinstall catkin_pkg catkin-tools && \
+    sudo -H pip3 uninstall -y vcstools && sudo -H pip3 uninstall -y wstool && \
+    git clone https://github.com/tkruse/vcstools &&  \
     cd vcstools && git checkout mock_server_tar_test && \
     sudo python3 setup.py develop && cd .. && \
     git clone https://github.com/vcstools/wstool && \
-    cd wstool && python3 setup.py develop
-
-RUN cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
-    cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
-    cd ~/ros_catkin_ws && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
-
-RUN cd && mkdir ~/ros_catkin_ws && cd ros_catkin_ws && \
-    rosinstall_generator desktop_full --rosdistro melodic --deps --tar > melodic-desktop-full.rosinstall && \
-    wstool init -j8 src melodic-desktop.rosinstall
+    cd wstool && sudo python3 setup.py develop
 
 ENV ROS_PYTHON_VERSION 3
-RUN sudo apt install -y libgpgme-dev python3-empy libeigen3-dev python3-sip python3-sip-dev libyaml-cpp-dev libboost-python-dev unzip python3-numpy
+RUN cd && mkdir -p ~/ros_catkin_ws && cd ~/ros_catkin_ws && \
+    rosinstall_generator desktop_full --rosdistro melodic --deps --tar > melodic-desktop-full.rosinstall && \
+    wstool init -j8 src melodic-desktop-full.rosinstall && \
+    sudo apt update -y && \
+    sudo rosdep init && rosdep update && \
+    cd ~/ros_catkin_ws && \
+    rosdep install --from-paths src --ignore-src --rosdistro melodic -y && \
+    sudo mkdir -p /opt/ros/melodic && \
+    cd ~/ros_catkin_ws/src && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git && \
+    cd ~/ros_catkin_ws/src && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git && \
+    cd ~/ros_catkin_ws/src && git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git && \
+    cd ~/ros_catkin_ws/ && \
+    sudo -H pip3 install -U pyside2  pyqt5 && \
+    sudo apt install -y libgpgme-dev python3-pyqt5 pyqt5-dev pyqt5-dev-tools python3-empy libeigen3-dev python3-sip python3-sip-dev libyaml-cpp-dev libboost-python-dev unzip python3-numpy && \
+    cd ~/ros_catkin_ws && ./src/catkin/bin/catkin_make_isolated -DPYTHON_VERSION=3.6 --install-space /opt/ros/melodic -DCMAKE_BUILD_TYPE=Release && \
+    sudo apt clean && \
+    rm -rf /var/lib/apt/list/*
 
-RUN rosdep install --from-paths src --ignore-src --rosdistro melodic -y && \
-    ./src/catkin/bin/catkin_make_isolated -DPYTHON_VERSION=3.6 --install -DCMAKE_BUILD_TYPE=Release && \
-    . ~/ros_catkin_ws/install_isolated/setup.bash
+#RUN . /opt/ros/melodic/setup.bash
 
-WORKDIR /home/docker
-RUN git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel && \
-    cd devel/gym-pyxis && sudo python setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo
-CMD ["bash"]
+#RUN cd ~ && git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel && \
+#    cd devel/gym-pyxis && sudo python setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo
+#CMD ["bash"]
 
 # xvfb-run -s '-screen 0 1280x1024x24' /bin/bash
 #docker run -ti --rm -p 11311:11311 -p 11345:11345 pyxis
