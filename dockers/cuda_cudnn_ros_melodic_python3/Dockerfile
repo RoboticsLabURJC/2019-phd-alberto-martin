@@ -99,12 +99,10 @@ RUN sudo -H pip3 install -U trollius rosdep rosinstall_generator rosinstall catk
 
 ENV ROS_PYTHON_VERSION 3
 RUN cd && mkdir -p ~/ros_catkin_ws && cd ~/ros_catkin_ws && \
-    rosinstall_generator ros_comm perception simulators turtlebot3 turtlebot3_simulations --rosdistro melodic --deps --tar --exclude turtlebot3_navigation > melodic-ros_comm.rosinstall && \
+    rosinstall_generator ros_comm perception geometry_msgs sensor_msgs --rosdistro melodic --deps --tar > melodic-ros_comm.rosinstall && \
     wstool init -j8 src melodic-ros_comm.rosinstall && \
     sudo apt update -y && \
     sudo rosdep init && rosdep update && \
-    sed -i '/rqt_robot_plugins/d' src/metapackages/simulators/package.xml && \
-    sed -i '/turtlebot3_navigation/d' src/turtlebot3/turtlebot3/package.xml  && \
     rosdep install --from-paths src --ignore-src --rosdistro melodic -y && \
     sudo apt install -y libgpgme-dev \
                         python3-opencv \
@@ -117,11 +115,10 @@ RUN cd && mkdir -p ~/ros_catkin_ws && cd ~/ros_catkin_ws && \
                         python3-sip-dev \
                         libyaml-cpp-dev \
                         libboost-python-dev \
-                        defusedxml \
-                        netifaces \
+                        python3-defusedxml \
+                        python3-netifaces \
                         unzip \
                         python3-numpy && \
-    rm -rf src/rqt_rviz/ && \
     sudo mkdir -p /opt/ros/melodic && sudo chown docker:docker /opt/ros/melodic && \
     cd ~/ros_catkin_ws && ./src/catkin/bin/catkin_make_isolated -DPYTHON_VERSION=3.6 --install --install-space /opt/ros/melodic -DCMAKE_BUILD_TYPE=Release && \
     echo ". /opt/ros/melodic/setup.bash" > ~/.bashrc && \
@@ -129,10 +126,10 @@ RUN cd && mkdir -p ~/ros_catkin_ws && cd ~/ros_catkin_ws && \
     rm -rf /var/lib/apt/list/*
 
 RUN cd ~ && git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel && \
-    cd devel/gym-pyxis && sudo python setup.py install && mkdir ~/.gazebo && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo && \
-    echo "export PYTHONPATH=/opt/ros/melodic/lib/python3/dist-packages/"
+    cd devel/gym-pyxis && sudo python setup.py install
 
-CMD ["bash"]
+COPY ./entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]
 
 # xvfb-run -s '-screen 0 1280x1024x24' /bin/bash
-#docker run -ti --rm -p 11311:11311 -p 11345:11345 pyxis
+#docker run -ti --rm -p 11311:11311 -p 11345:11345 cuda_cudnn_ros_melodic_python3
