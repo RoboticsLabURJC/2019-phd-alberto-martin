@@ -132,4 +132,5 @@ COPY ./entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
 
 # xvfb-run -s '-screen 0 1280x1024x24' /bin/bash
-#docker run -ti --rm -p 11311:11311 -p 11345:11345 cuda_cudnn_ros_melodic_python3
+# docker run -ti --rm -p 11311:11311 -p 11345:11345 cuda_cudnn_ros_melodic_python3
+# rosinstall_generator ros_comm perception geometry_msgs sensor_msgs gazebo_ros_pkgs --rosdistro melodic --deps --tar > melodic-ros_comm.rosinstall && \

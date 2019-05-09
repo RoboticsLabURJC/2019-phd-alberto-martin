@@ -7,13 +7,15 @@ input_file_ext="${1#*.}"
 
 
 if [ "$input_file_ext" = 'launch' ]; then
-
+    roscore &
     if [ "$2" = 'gzweb' ]; then
         cd $GZWEB_WS
-        roslaunch $input_file_ext & npm start
+        roslaunch $1 & npm start
+        echo "roslaunch $1 & npm start"
+        exit 0
     fi
 
-    roslaunch $input_file_ext
+    roslaunch $1
 else
     exec "$@"
 fi

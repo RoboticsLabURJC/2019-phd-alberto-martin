@@ -17,17 +17,21 @@ DEFAULT_MASTER_URI = 'http://localhost:%s/' % DEFAULT_MASTER_PORT
 
 logger = logging.getLogger(__name__)
 
+
 class TestRospy(unittest.TestCase):
 
     def test_rospy(self):
         if "ROS_MASTER_URI" not in os.environ:
             os.environ["ROS_MASTER_URI"] = DEFAULT_MASTER_URI
+            print('Ros master uri not defined')
 
         try:
             rosgraph.Master('/rostopic').getPid()
+            print('Master comunication ok')
         except socket.error:
             self.assertEqual(True, False, "Unable to communicate with master!")
 
+        vel_pub_service = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
         rospy.init_node('test_rospy', anonymous=True)
         timeout = 5
 
@@ -40,6 +44,7 @@ class TestRospy(unittest.TestCase):
                 turtlebot_version = 3
 
         if turtlebot_version == 3.14:
+
             image_data = None
             cv_image = None
             while image_data is None:
@@ -57,12 +62,16 @@ class TestRospy(unittest.TestCase):
             try:
                 data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
             except Exception as e:
+                print('exception raised: {}'.format(e))
                 logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
 
         print(data)
 
         vel_cmd = Twist()
-        vel_cmd.linear.x = 0.5
-        vel_cmd.angular.z = 0.5
-        vel_pub_service = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
+        vel_cmd.linear.x = 0.0
+        vel_cmd.angular.z = 0.0
         vel_pub_service.publish(vel_cmd)
+
+
+if __name__ == '__main__':
+    TestRospy().test_rospy()
