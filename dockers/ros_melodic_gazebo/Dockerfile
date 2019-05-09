@@ -55,6 +55,7 @@ RUN sudo apt update && sudo apt install -y \
     && rosdep update
 
 ENV GAZEBO_MODEL_PATH /home/docker/.gazebo/models
+ENV GAZEBO_RESOURCE_PATH $GAZEBO_RESOURCE_PATH:/home/docker/jderobot_assets/gazebo/worlds/
 WORKDIR /home/docker/
 
 RUN mkdir -p $HOME/.gazebo/models && wget -P /tmp/ https://bitbucket.org/osrf/gazebo_models/get/default.tar.gz &&\
@@ -63,7 +64,7 @@ RUN mkdir -p $HOME/.gazebo/models && wget -P /tmp/ https://bitbucket.org/osrf/ga
 
 RUN cd ~ && git clone https://github.com/RoboticsURJC-students/2019-phd-alberto-martin.git devel && \
     cd devel/gym-pyxis && cp -r gym_pyxis/envs/gazebo/assets/models ~/.gazebo && \
-    cp -r /opt/ros/melodic/share/turtlebot3_description ~/.gazebo/models && \
+    cp -r /opt/ros/melodic/share/turtlebot3_description $GAZEBO_MODEL_PATH && \
     cp -r /opt/ros/melodic/share/turtlebot3_gazebo/models ~/.gazebo/
 
 RUN cd ~ && git clone https://github.com/JdeRobot/assets.git jderobot_assets && \
@@ -74,7 +75,8 @@ ENV GZWEB_WS /home/docker/gzweb
 RUN cd && hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS && \
     cd $GZWEB_WS && \
     hg up default  &&\
-    xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m -t
+    xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m -t && \
+    cp -r /opt/ros/melodic/share/turtlebot3_description $GZWEB_WS/http/client/assets
 
 COPY ./entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
