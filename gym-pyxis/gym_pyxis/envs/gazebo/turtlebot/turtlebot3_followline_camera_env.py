@@ -1,4 +1,3 @@
-import cv2
 import gym
 import logging
 import numpy as np
@@ -20,6 +19,7 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         self.action_space = spaces.Discrete(3)
         self.reward_range = (-np.inf, np.inf)
         self.np_random = 0
+        self.observation_space = gym.spaces.Box(low=0, high=255, shape=(480, 640, 1), dtype=np.uint8)
         self.seed()
 
     @staticmethod
@@ -61,7 +61,6 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
             self.turtlebot.send_velocity_command(0.05, -0.2)
 
         image = self.turtlebot.get_camera_data()
-
         # cv2.imwrite('image.png', image)
 
         self.turtlebot.pause_physics()

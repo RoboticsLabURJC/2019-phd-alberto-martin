@@ -4,9 +4,10 @@ import gym_pyxis
 import random
 import numpy as np
 
+from .utils import wrappers
 
 if __name__ == "__main__":
-    env = gym.make('Turtlebot3FollowLineCameraEnv-v0')
+    env = wrappers.make_env('Turtlebot3FollowLineCameraEnv-v0')
     state = env.reset()
     total_reward = 0.0
     actions = np.arange(env.action_space.n)
