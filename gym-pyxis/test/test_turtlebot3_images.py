@@ -8,13 +8,13 @@ class TestTurtlebot3Images(unittest.TestCase):
     def test_turtlebot3_images(self):
 
         img = cv2.imread('image.png')
-        image_region = utils.get_image_region(img, True)
+        robot_position = utils.get_robot_position_respect_road(img, debug=True)
 
-        if image_region == 'safe_region':
+        if robot_position == 'center_road':
             reward = 2
-        elif image_region == 'unsafe_region':
+        elif robot_position == 'in_road':
             reward = 0.5
         else:
-            reward = 0
+            reward = -1
 
         print('reward: {}'.format(reward))

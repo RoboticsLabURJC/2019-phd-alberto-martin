@@ -11,8 +11,13 @@ logger = logging.getLogger(__name__)
 
 class Turtlebot3FollowLineCameraEnv(gym.Env):
 
-
     metadata = {'render.modes': ['human']}
+
+    ACTION_MEANING = {
+        0: "FORWARD",
+        1: "LEFT",
+        2: "RIGHT"
+    }
 
     def __init__(self):
 
@@ -21,19 +26,31 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         self.reward_range = (-np.inf, np.inf)
         self.np_random = 0
         self.seed()
+        # TODO: improve the way to compute if an episode is done
+        self._steps_count = 0
+        self._rewards = []
 
     @staticmethod
     def _compute_reward(image):
-        image_region = turtlebot_utils.get_image_region(image)
+        # TODO: it is a naive approach
+        robot_position = turtlebot_utils.get_robot_position_respect_road(image)
 
-        if image_region == 'safe_region':
+        if robot_position == 'center_road':
             return 2.0
-        elif image_region == 'unsafe_region':
+        elif robot_position == 'in_road':
             return 0.5
 
-        return 0.0
+        return -1.0
 
     def _is_done(self):
+        # TODO: improve the way to compute if an episode is done
+        if self._steps_count >= 1000:
+            percentile = 70
+            reward_bound = np.percentile(self._rewards, percentile)
+            reward_mean = float(np.mean(self._rewards))
+            if reward_mean > reward_bound:
+                return True
+
         return False
 
     def seed(self, seed=None):
@@ -48,16 +65,17 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         return image
 
     def step(self, action):
+
+        if action not in Turtlebot3FollowLineCameraEnv.ACTION_MEANING:
+            raise ValueError("Action {} not found".format(action))
+
         self.turtlebot.unpause_physics()
 
-        if action == 0:
-            # FORWARD
+        if Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'FORWARD':
             self.turtlebot.send_velocity_command(0.2, 0.0)
-        elif action == 1:
-            # LEFT
+        elif Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'LEFT':
             self.turtlebot.send_velocity_command(0.05, 0.2)
-        elif action == 2:
-            # RIGHT
+        elif Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'RIGHT':
             self.turtlebot.send_velocity_command(0.05, -0.2)
 
         image = self.turtlebot.get_camera_data()
@@ -66,6 +84,8 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
 
         self.turtlebot.pause_physics()
         reward = Turtlebot3FollowLineCameraEnv._compute_reward(image)
+        self._steps_count += 1
+        self._rewards.append(reward)
         done = self._is_done()
 
         return image, reward, done, {}
@@ -73,3 +93,12 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
     def close(self):
         self.turtlebot.send_velocity_command(0.0, 0.0)
         self.turtlebot.reset_simulation()
+
+    def render(self, mode='human', close=False):
+        raise NotImplementedError()
+
+    @staticmethod
+    def get_action_meaning(action):
+        if action in Turtlebot3FollowLineCameraEnv.ACTION_MEANING:
+            return Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action]
+        return 'Unknown'

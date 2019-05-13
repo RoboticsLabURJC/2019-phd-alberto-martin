@@ -18,18 +18,17 @@ def discretize_observation(data, new_ranges, min_range = 0.2):
     return discretized_ranges, done
 
 
-def draw_regions(roi, left_x_safe_region, right_x_safe_region, left_x_unsafe_region, right_x_unsafe_region):
+def draw_region_and_road_center(roi, left_x_safe_region, right_x_safe_region, road_x, road_y):
     img_height, img_width, _ = roi.shape
 
-    cv2.line(roi, (left_x_safe_region, 0), (left_x_safe_region, img_height), (0,255,0), 2)
+    cv2.line(roi, (left_x_safe_region, 0), (left_x_safe_region, img_height), (0, 255, 0), 2)
     cv2.line(roi, (right_x_safe_region, 0), (right_x_safe_region, img_height), (0, 255, 0), 2)
 
-    cv2.line(roi, (left_x_unsafe_region, 0), (left_x_unsafe_region, img_height), (0,0,255), 2)
-    cv2.line(roi, (right_x_unsafe_region, 0), (right_x_unsafe_region, img_height), (0, 0, 255), 2)
+    cv2.circle(roi, (road_x, road_y), 10, (0, 0, 255), 2)
 
 
-def get_image_region(img, debug=False):
-    img_height, img_widht, _ = img.shape
+def get_robot_position_respect_road(img, debug=False):
+    img_height, img_width, _ = img.shape
 
     roi_y_max = img_height - 20
     roi_y_min = roi_y_max - 100
@@ -41,49 +40,43 @@ def get_image_region(img, debug=False):
 
     ret, th1 = cv2.threshold(roi_grayscale, 127, 255, cv2.THRESH_BINARY)
 
-    roi_height, roi_width = th1.shape
-    middle_x = roi_width / 2.0
-    padding_px = 10
+    road_detected = False
+    if np.sum(th1) > 0:
+        road_detected = True
 
-    left_x_safe_region = middle_x - padding_px
-    right_x_safe_region = middle_x + padding_px
-    left_x_unsafe_region = left_x_safe_region - (padding_px * 4)
-    right_x_unsafe_region = right_x_safe_region + (padding_px * 4)
+        M = cv2.moments(th1)
+        cX = int(M["m10"] / M["m00"])
+        cY = int(M["m01"] / M["m00"])
+
+    roi_height, roi_width = th1.shape
+    middle_x = int(roi_width / 2.0)
+
+    out_road = False
+    if th1[roi_height - 1, middle_x] == 0:
+        out_road = True
+
+    padding_px = 40
+
+    line_center_left = middle_x - padding_px
+    line_center_right = middle_x + padding_px
+
+    in_center_of_road = False
+    if road_detected:
+        if cX > line_center_left and cX < line_center_right and road_detected:
+            in_center_of_road = True
 
     if debug:
         cv2.imshow('input', img)
         cv2.imshow('th', th1)
-        draw_regions(roi, int(left_x_safe_region), int(right_x_safe_region), int(left_x_unsafe_region),
-                     int(right_x_unsafe_region))
+        draw_region_and_road_center(roi, int(line_center_left), int(line_center_right), cX, cY)
         cv2.imshow('regions', roi)
+        cv2.waitKey(0)
 
-    bin, contours, hierarchy = cv2.findContours(th1, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    if in_center_of_road:
+        return 'center_road'
+    elif not out_road:
+        return 'in_road'
 
-    rects = {}
-    for c in contours:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        x, y, w, h = cv2.boundingRect(approx)
-        rect = (x, y, w, h)
-        rects[w*h] = rect
-        if debug:
-            cv2.rectangle(roi, (x,y), (x+w, y+h), (0,255,255), 1)
+    return 'out_road'
 
-    if len(rects) > 0:
-        biggest_rect = rects[list(rects.keys())[-1]]
-        middle_rect_x = biggest_rect[0] + (biggest_rect[2] / 2.0)
 
-        if debug:
-            cv2.line(roi, (int(middle_rect_x), 0), (int(middle_rect_x), roi_height), (255, 0, 255), 2)
-            cv2.imshow('roi', roi)
-            cv2.waitKey(0)
-
-        if middle_rect_x > left_x_safe_region and middle_rect_x < right_x_safe_region:
-            return 'safe_region'
-        elif middle_rect_x > left_x_unsafe_region and middle_rect_x < left_x_safe_region or \
-             middle_rect_x < right_x_unsafe_region and middle_rect_x > right_x_safe_region:
-             return 'unsafe_region'
-        else:
-            return 'out_road'
-    else:
-        return 'out_road'
