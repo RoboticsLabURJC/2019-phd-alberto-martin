@@ -1,4 +1,3 @@
-import cv2
 import gym
 import logging
 import numpy as np
@@ -25,6 +24,7 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         self.action_space = spaces.Discrete(3)
         self.reward_range = (-np.inf, np.inf)
         self.np_random = 0
+        self.observation_space = gym.spaces.Box(low=0, high=255, shape=(480, 640, 1), dtype=np.uint8)
         self.seed()
         # TODO: improve the way to compute if an episode is done
         self._steps_count = 0
@@ -71,15 +71,14 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
 
         self.turtlebot.unpause_physics()
 
-        if Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'FORWARD':
+        if Turtlebot3FollowLineCameraEnv.get_action_meaning(action) == 'FORWARD':
             self.turtlebot.send_velocity_command(0.2, 0.0)
-        elif Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'LEFT':
+        elif Turtlebot3FollowLineCameraEnv.get_action_meaning(action) == 'LEFT':
             self.turtlebot.send_velocity_command(0.05, 0.2)
-        elif Turtlebot3FollowLineCameraEnv.ACTION_MEANING[action] == 'RIGHT':
+        elif Turtlebot3FollowLineCameraEnv.get_action_meaning(action) == 'RIGHT':
             self.turtlebot.send_velocity_command(0.05, -0.2)
 
         image = self.turtlebot.get_camera_data()
-
         # cv2.imwrite('image.png', image)
 
         self.turtlebot.pause_physics()

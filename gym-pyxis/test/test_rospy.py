@@ -35,37 +35,27 @@ class TestRospy(unittest.TestCase):
         rospy.init_node('test_rospy', anonymous=True)
         timeout = 5
 
-        if "TURTLEBOT3_MODEL" not in os.environ:
-            turtlebot_version = 2
-        else:
-            if 'waffle_pi' == os.getenv('TURTLEBOT3_MODEL', 'burger'):
-                turtlebot_version = 3.14
-            else:
-                turtlebot_version = 3
-
-        if turtlebot_version == 3.14:
-
-            image_data = None
-            cv_image = None
-            while image_data is None:
-                try:
-                    image_data = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=timeout)
-                    cv_image = CvBridge().imgmsg_to_cv2(image_data, "bgr8")
-                except Exception as e:
-                    print('exception raised: {}'.format(e))
-                    logger.warning("TurtlebotEnv: exception raised getting camera data {}".format(e))
-
-            cv2.imwrite('test.png', cv_image)
-
-        data = None
-        while data is None:
+        image_data = None
+        cv_image = None
+        while image_data is None:
             try:
-                data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
+                image_data = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=timeout)
+                cv_image = CvBridge().imgmsg_to_cv2(image_data, "bgr8")
             except Exception as e:
                 print('exception raised: {}'.format(e))
-                logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
+                logger.warning("TurtlebotEnv: exception raised getting camera data {}".format(e))
 
-        print(data)
+        cv2.imwrite('test.png', cv_image)
+
+        # data = None
+        # while data is None:
+        #     try:
+        #         data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
+        #     except Exception as e:
+        #         print('exception raised: {}'.format(e))
+        #         logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
+        #
+        # print(data)
 
         vel_cmd = Twist()
         vel_cmd.linear.x = 0.0
