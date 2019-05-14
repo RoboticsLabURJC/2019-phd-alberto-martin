@@ -25,6 +25,24 @@ class ProcessFrame84(gym.ObservationWrapper):
         return x_t.astype(np.uint8)
 
 
+class ImageToTF(gym.ObservationWrapper):
+    def __init__(self, env):
+        super(ImageToTF, self).__init__(env)
+        old_shape = self.observation_space.shape
+        self.observation_space = gym.spaces.Box(low=0.0, high=1.0, shape=(old_shape[-1], old_shape[0], old_shape[1]),
+                                                dtype=np.float32)
+
+    def observation(self, observation):
+        return np.moveaxis(observation, 2, 0)
+
+
+class ScaledFloatFrame(gym.ObservationWrapper):
+    def observation(self, obs):
+        return np.array(obs).astype(np.float32) / 255.0
+
+
 def make_env(env_name):
     env = gym.make(env_name)
-    return ProcessFrame84(env)
+    env = ProcessFrame84(env)
+    env = ImageToTF(env)
+    return ScaledFloatFrame(env)

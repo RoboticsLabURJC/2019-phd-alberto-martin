@@ -44,11 +44,13 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
 
     def _is_done(self):
         # TODO: improve the way to compute if an episode is done
-        if self._steps_count >= 1000:
+        if self._steps_count >= 500:
             percentile = 70
             reward_bound = np.percentile(self._rewards, percentile)
             reward_mean = float(np.mean(self._rewards))
             if reward_mean > reward_bound:
+                self._steps_count = 0
+                self._rewards = []
                 return True
 
         return False
@@ -58,6 +60,8 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         return [seed]
 
     def reset(self):
+        self._steps_count = 0
+        self._rewards = []
         self.turtlebot.reset_simulation()
         self.turtlebot.unpause_physics()
         image = self.turtlebot.get_camera_data()

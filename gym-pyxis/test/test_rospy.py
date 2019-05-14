@@ -47,15 +47,15 @@ class TestRospy(unittest.TestCase):
 
         cv2.imwrite('test.png', cv_image)
 
-        # data = None
-        # while data is None:
-        #     try:
-        #         data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
-        #     except Exception as e:
-        #         print('exception raised: {}'.format(e))
-        #         logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
-        #
-        # print(data)
+        data = None
+        while data is None:
+            try:
+                data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
+            except Exception as e:
+                print('exception raised: {}'.format(e))
+                logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
+
+        print(data)
 
         vel_cmd = Twist()
         vel_cmd.linear.x = 0.0

@@ -20,9 +20,9 @@ class Turtlebot3:
     def __init__(self):
         try:
             rospy.init_node('turtlebot3', anonymous=True)
-            logger.info("GazeboEnv: gym ROS node created.")
+            logger.info("Turtlebot3Env: gym ROS node created.")
         except rospy.exceptions.ROSException as re:
-            logger.error("GazeboEnv: exception raised creating gym ROS node. {}".format(re))
+            logger.error("Turtlebot3Env: exception raised creating gym ROS node. {}".format(re))
             self.close()
             sys.exit(-1)
 
@@ -39,21 +39,21 @@ class Turtlebot3:
         try:
             self.reset_service()
         except rospy.ServiceException as e:
-            logger.warning("TurtlebotEnv: exception raised reset simulation {}".format(e))
+            logger.warning("Turtlebot3Env: exception raised reset simulation {}".format(e))
 
     def pause_physics(self):
         rospy.wait_for_service('/gazebo/pause_physics')
         try:
             self.pause_service()
         except rospy.ServiceException as e:
-            logger.warning("TurtlebotEnv: exception raised pause physics {}".format(e))
+            logger.warning("Turtlebot3Env: exception raised pause physics {}".format(e))
 
     def unpause_physics(self):
         rospy.wait_for_service('/gazebo/unpause_physics')
         try:
             self.unpause_service()
         except rospy.ServiceException as e:
-            logger.warning("TurtlebotEnv: exception raised unpause physics {}".format(e))
+            logger.warning("Turtlebot3Env: exception raised unpause physics {}".format(e))
 
     def get_laser_data(self, timeout=5):
         data = None
@@ -61,7 +61,7 @@ class Turtlebot3:
             try:
                 data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
             except Exception as e:
-                logger.warning("TurtlebotEnv: exception raised getting laser data {}".format(e))
+                logger.warning("Turtlebot3Env: exception raised getting laser data {}".format(e))
 
         return data
 
@@ -73,7 +73,7 @@ class Turtlebot3:
                 image_data = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=timeout)
                 cv_image = CvBridge().imgmsg_to_cv2(image_data, "bgr8")
             except Exception as e:
-                logger.warning("TurtlebotEnv: exception raised getting camera data {}".format(e))
+                logger.warning("Turtlebot3Env: exception raised getting camera data {}".format(e))
 
         return cv_image
 
