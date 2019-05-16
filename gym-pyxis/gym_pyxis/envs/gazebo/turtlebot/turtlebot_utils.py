@@ -23,8 +23,8 @@ def draw_region_and_road_center(roi, left_x_safe_region, right_x_safe_region, ro
 
     cv2.line(roi, (left_x_safe_region, 0), (left_x_safe_region, img_height), (0, 255, 0), 2)
     cv2.line(roi, (right_x_safe_region, 0), (right_x_safe_region, img_height), (0, 255, 0), 2)
-
-    cv2.circle(roi, (road_x, road_y), 10, (0, 0, 255), 2)
+    if road_y >= 0 and road_x >= 0:
+        cv2.circle(roi, (road_x, road_y), 10, (0, 0, 255), 2)
 
 
 def get_robot_position_respect_road(img, debug=False):
@@ -41,6 +41,8 @@ def get_robot_position_respect_road(img, debug=False):
     ret, th1 = cv2.threshold(roi_grayscale, 127, 255, cv2.THRESH_BINARY)
 
     road_detected = False
+    cX = -1
+    cY = -1
     if np.sum(th1) > 0:
         road_detected = True
 
@@ -65,18 +67,20 @@ def get_robot_position_respect_road(img, debug=False):
         if cX > line_center_left and cX < line_center_right and road_detected:
             in_center_of_road = True
 
+    robot_position = 'out_road'
+    if in_center_of_road:
+        robot_position = 'center_road'
+    elif not out_road:
+        robot_position = 'in_road'
+
     if debug:
+        cv2.putText(img, robot_position, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
         cv2.imshow('input', img)
         cv2.imshow('th', th1)
         draw_region_and_road_center(roi, int(line_center_left), int(line_center_right), cX, cY)
         cv2.imshow('regions', roi)
-        cv2.waitKey(0)
+        # cv2.waitKey(0)
 
-    if in_center_of_road:
-        return 'center_road'
-    elif not out_road:
-        return 'in_road'
-
-    return 'out_road'
+    return robot_position
 
 
