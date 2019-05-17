@@ -31,11 +31,19 @@ if __name__ == '__main__':
             print('Error opening video file')
             sys.exit(-1)
 
+        old_frame = None
         while cap.isOpened():
             ret, frame = cap.read()
             if ret:
                 # cv2.imshow('input', frame)
-                turtlebot_utils.get_robot_position_respect_road(frame, debug=True)
+
+                # turtlebot_utils.get_robot_position_respect_road(np.copy(frame), debug=True)
+                if old_frame is None:
+                    old_frame = frame
+                    continue
+
+                turtlebot_utils.estimate_movement(np.copy(frame), np.copy(old_frame))
+                old_frame = frame
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
 

@@ -12,7 +12,7 @@ from utils import wrappers
 from utils import dqn_model
 
 
-MEAN_REWARD_BOUND = 800
+MEAN_REWARD_BOUND = 10000
 
 GAMMA = 0.99
 BATCH_SIZE = 32
@@ -50,14 +50,10 @@ class Agent:
         self.env = env
         self.exp_buffer = exp_buffer
         self._reset()
-        self._steps_count = 0
-        self._rewards = []
 
     def _reset(self):
         self.state = env.reset()
         self.total_reward = 0.0
-        self._steps_count = 0
-        self._rewards = []
 
     def play_step(self, net, epsilon=0.0):
         done_reward = None
@@ -73,9 +69,6 @@ class Agent:
 
         # do step in the environment
         new_state, reward, is_done, _ = self.env.step(action)
-        self._steps_count += 1
-        self._rewards.append(reward)
-
         self.total_reward += reward
         new_state = new_state
 
@@ -86,11 +79,6 @@ class Agent:
         if is_done:
             done_reward = self.total_reward
             self._reset()
-
-        if not is_done and self._steps_count >= 500:
-            if np.mean(self._rewards[-20:]) == -1:
-                self._reset()
-
 
         return done_reward
 

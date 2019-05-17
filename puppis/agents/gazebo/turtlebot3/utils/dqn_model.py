@@ -18,7 +18,7 @@ class DQN(tf.keras.Model):
         self.dense2 = tf.keras.layers.Dense(n_actions)
 
     def call(self, input):
-        input = tf.reshape(input, shape=[-1, 84, 84, 1])
+        input = tf.reshape(input, shape=[-1, 84, 84, 4])
         result = self.conv2d1(input)
         result = self.conv2d2(result)
         result = self.conv2d3(result)
