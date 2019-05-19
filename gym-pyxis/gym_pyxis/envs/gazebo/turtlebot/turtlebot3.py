@@ -42,8 +42,8 @@ class Turtlebot3(GazeboHandler):
 
         return cv_image
 
-    def send_velocity_command(self, linearx, angularz):
+    def send_velocity_command(self, linear_x, angular_z):
         vel_cmd = Twist()
-        vel_cmd.linear.x = linearx
-        vel_cmd.angular.z = angularz
+        vel_cmd.linear.x = linear_x
+        vel_cmd.angular.z = angular_z
         self.vel_pub_service.publish(vel_cmd)

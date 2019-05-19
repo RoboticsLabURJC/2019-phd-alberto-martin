@@ -46,7 +46,7 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
 
     def reset(self):
         self.turtlebot.reset_simulation()
-        self.turtlebot.unpause_physics()
+        self.turtlebot.un_pause_physics()
         self.turtlebot.send_velocity_command(0.0, 0.0)
         image = self.turtlebot.get_camera_data()
         self.turtlebot.pause_physics()
@@ -57,7 +57,7 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
         if action not in Turtlebot3FollowLineCameraEnv.ACTION_MEANING:
             raise ValueError("Action {} not found".format(action))
 
-        self.turtlebot.unpause_physics()
+        self.turtlebot.un_pause_physics()
 
         if Turtlebot3FollowLineCameraEnv.get_action_meaning(action) == 'FORWARD':
             self.turtlebot.send_velocity_command(0.4, 0.0)

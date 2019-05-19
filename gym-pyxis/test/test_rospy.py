@@ -6,10 +6,9 @@ import socket
 import logging
 import unittest
 from geometry_msgs.msg import Twist
-from std_srvs.srv import Empty
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import LaserScan
-from cv_bridge import CvBridge, CvBridgeError
+from cv_bridge import CvBridge
 
 DEFAULT_NODE_PORT = 0  # bind to any open port
 DEFAULT_MASTER_PORT = 11311  # default port for master's to bind to
@@ -27,7 +26,7 @@ class TestRospy(unittest.TestCase):
 
         try:
             rosgraph.Master('/rostopic').getPid()
-            print('Master comunication ok')
+            print('Master communication ok')
         except socket.error:
             self.assertEqual(True, False, "Unable to communicate with master!")
 
@@ -61,7 +60,3 @@ class TestRospy(unittest.TestCase):
         vel_cmd.linear.x = 0.0
         vel_cmd.angular.z = 0.0
         vel_pub_service.publish(vel_cmd)
-
-
-if __name__ == '__main__':
-    TestRospy().test_rospy()
