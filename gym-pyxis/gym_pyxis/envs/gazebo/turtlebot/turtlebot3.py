@@ -1,71 +1,36 @@
-import os
-import sys
 import rospy
 import logging
-from std_srvs.srv import Empty
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
-from cv_bridge import CvBridge, CvBridgeError
+from cv_bridge import CvBridge
+
+from gym_pyxis.envs.gazebo import GazeboHandler
 
 logger = logging.getLogger(__name__)
 
 
-class Turtlebot3:
-
-    DEFAULT_NODE_PORT = 0  # bind to any open port
-    DEFAULT_MASTER_PORT = 11311  # default port for master's to bind to
-    DEFAULT_MASTER_URI = 'http://localhost:%s/' % DEFAULT_MASTER_PORT
+class Turtlebot3(GazeboHandler):
 
     def __init__(self):
-        try:
-            rospy.init_node('turtlebot3', anonymous=True)
-            logger.info("Turtlebot3Env: gym ROS node created.")
-        except rospy.exceptions.ROSException as re:
-            logger.error("Turtlebot3Env: exception raised creating gym ROS node. {}".format(re))
-            self.close()
-            sys.exit(-1)
-
-        if 'TURTLEBOT3_MODEL' not in os.environ:
-            os.environ['TURTLEBOT3_MODEL'] = 'waffle_pi'
-
+        self.node_name = 'turtlebot3'
+        super(Turtlebot3, self).__init__(self.node_name)
         self.vel_pub_service = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
-        self.unpause_service = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
-        self.pause_service = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
-        self.reset_service = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
 
-    def reset_simulation(self):
-        rospy.wait_for_service('/gazebo/reset_simulation')
-        try:
-            self.reset_service()
-        except rospy.ServiceException as e:
-            logger.warning("Turtlebot3Env: exception raised reset simulation {}".format(e))
-
-    def pause_physics(self):
-        rospy.wait_for_service('/gazebo/pause_physics')
-        try:
-            self.pause_service()
-        except rospy.ServiceException as e:
-            logger.warning("Turtlebot3Env: exception raised pause physics {}".format(e))
-
-    def unpause_physics(self):
-        rospy.wait_for_service('/gazebo/unpause_physics')
-        try:
-            self.unpause_service()
-        except rospy.ServiceException as e:
-            logger.warning("Turtlebot3Env: exception raised unpause physics {}".format(e))
-
-    def get_laser_data(self, timeout=5):
+    @staticmethod
+    def get_laser_data(timeout=5):
         data = None
         while data is None:
             try:
                 data = rospy.wait_for_message('/scan', LaserScan, timeout=timeout)
             except Exception as e:
-                logger.warning("Turtlebot3Env: exception raised getting laser data {}".format(e))
+                logger.warning("turtlebot3: exception raised getting laser data {}".format(e))
 
         return data
 
-    def get_camera_data(self, timeout=5):
+    @staticmethod
+    def get_camera_data(timeout=5):
+        # (480, 640, 3)
         image_data = None
         cv_image = None
         while image_data is None:
@@ -73,7 +38,7 @@ class Turtlebot3:
                 image_data = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=timeout)
                 cv_image = CvBridge().imgmsg_to_cv2(image_data, "bgr8")
             except Exception as e:
-                logger.warning("Turtlebot3Env: exception raised getting camera data {}".format(e))
+                logger.warning("turtlebot3: exception raised getting camera data {}".format(e))
 
         return cv_image
 
