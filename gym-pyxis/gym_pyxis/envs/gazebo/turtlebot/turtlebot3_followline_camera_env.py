@@ -47,6 +47,7 @@ class Turtlebot3FollowLineCameraEnv(gym.Env):
     def reset(self):
         self.turtlebot.reset_simulation()
         self.turtlebot.unpause_physics()
+        self.turtlebot.send_velocity_command(0.0, 0.0)
         image = self.turtlebot.get_camera_data()
         self.turtlebot.pause_physics()
         return image
