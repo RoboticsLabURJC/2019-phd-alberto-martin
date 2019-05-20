@@ -1,7 +1,19 @@
 # Gazebo plugin to get world coordinate from mouse click
 
-It is a system plugin, when you load the plugin you only can click on screen you cant move the view, zoom, ...
-Probably the reason is that this plugin is a system plugin instead of gui plugin.
+Add plugin path to ~/.gazebo/gui.ini
+```
+...
+[overlay_plugins]
+filenames=libgui_click_coordinates_widget.so
+
+```
+
+Update GAZEBO_PLUGIN_PATH with the path to the .so
 
 gzserver &
-gzclient -g libclick_coordinates.so
+
+gzclient
+
+
+You can also include the plugin in a world file (and dont modify gui.ini), see click_coordinates.world file.
+
