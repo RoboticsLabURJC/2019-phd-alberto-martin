@@ -17,6 +17,13 @@ register(
     # More arguments here
 )
 
+# f1 envs
+register(
+    id='F1FollowLineCameraEnv-v0',
+    entry_point='gym_pyxis.envs.gazebo.f1:F1FollowLineCameraEnv',
+    # More arguments here
+)
+
 register(
     id='WorldPlayerStageEnv-v0',
     entry_point='gym_pyxis.envs.player_stage:WorldPlayerStageEnv',
