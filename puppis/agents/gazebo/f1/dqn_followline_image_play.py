@@ -17,7 +17,7 @@ DEFAULT_ENV_NAME = "F1FollowLineCameraEnv-v0"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument("-m", "--model", required=True, help="Model file to load")
+    parser.add_argument("-m", "--model", required=True, help="Model file to load")
     parser.add_argument("-e", "--env", default=DEFAULT_ENV_NAME,
                         help="Environment name to use, default=" + DEFAULT_ENV_NAME)
     parser.add_argument("-r", "--record", help="Directory to store video recording")
@@ -35,8 +35,7 @@ if __name__ == "__main__":
                                model=net,
                                optimizer_step=tf.train.get_or_create_global_step())
 
-    checkpoint_dir = 'checkpoints/'
-    root.restore(tf.train.latest_checkpoint(checkpoint_dir))
+    root.restore(tf.train.latest_checkpoint(args.model))
 
     state = env.reset()
     total_reward = 0.0

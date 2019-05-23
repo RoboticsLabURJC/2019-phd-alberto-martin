@@ -1,6 +1,7 @@
 import os
 import cv2
 import sys
+import math
 import rospy
 import rosbag
 import signal
@@ -8,9 +9,17 @@ import datetime
 import argparse
 import numpy as np
 
+import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+import matplotlib.pyplot as plt
+
+from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from gym_pyxis.envs.gazebo.f1 import f1_utils
+
+from tf.transformations import euler_from_quaternion
 
 exit = False
 def signal_handler(signal_number, frame):
@@ -18,8 +27,79 @@ def signal_handler(signal_number, frame):
     exit = True
 
 
+def plot_path(odometry):
+    mpl.rcParams['legend.fontsize'] = 10
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+
+    x = []
+    y = []
+    z = []
+    for msg in odometry:
+        x.append(msg.pose.pose.position.x)
+        y.append(msg.pose.pose.position.y)
+        z.append(msg.pose.pose.position.z)
+
+    x = [v - max(x) for v in x]
+    y = [v - max(y) for v in y]
+    z = [v - max(z) for v in z]
+
+    xmax = max(x)
+    if xmax == 0:
+        xmax = abs(max(x) - min(x))
+
+    ax.set_xlim([min(x) * 2 , xmax * 2])
+    ax.set_ylim([min(y) * 0.5 ,  0.5])
+    ax.plot(x, y, z, label='path')
+    ax.legend()
+
+    plt.figure()
+    plt.plot(x,y)
+    plt.ylim(0.0, -26)
+    plt.xlim(-0.15, 0.10)
+
+
+def plot_orientation(odometry):
+
+    x = []
+    roll = []
+    pitch = []
+    yaw = []
+    for msg in odometry:
+        x.append(msg.header.stamp.to_sec())
+        euler_orientation = euler_from_quaternion((msg.pose.pose.orientation.x,
+                                                   msg.pose.pose.orientation.y,
+                                                   msg.pose.pose.orientation.z,
+                                                   msg.pose.pose.orientation.w))
+        roll.append(euler_orientation[0])
+        pitch.append(euler_orientation[1])
+        yaw.append(euler_orientation[2])
+
+    norm_yaw = [x - max(yaw) for x in yaw]
+    norm_roll = [x - max(roll) for x in roll]
+    norm_pitch = [x - max(pitch) for x in pitch]
+
+    max_y = max([max(norm_roll), max(norm_pitch), max(norm_yaw)])
+    min_y = min([min(norm_roll), min(norm_pitch), min(norm_yaw)])
+
+    if max_y == 0:
+        max_y = 0.1
+
+    if min_y == 0:
+        min_y = -0.1
+
+    plt.figure()
+    plt.ylim(min_y * 2, max_y * 0.5)
+    plt.plot(x, norm_roll, 'b', label='roll')
+    plt.plot(x, norm_pitch, 'r', label='pitch')
+    plt.plot(x, norm_yaw, 'g', label='yaw')
+    plt.gca().legend(('roll', 'pitch', 'yaw'))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("--capture", choices=['image', 'odom', 'both'], default='both', required=False)
     parser.add_argument("--read", type=str, help="Path to .bag file to read")
     parser.add_argument("--debug_video", type=str, help="Path to .bag file to read")
     args = parser.parse_args()
@@ -65,9 +145,15 @@ if __name__ == '__main__':
             rospy.init_node('training_logger', anonymous=True)
             while not exit:
 
-                image_data = rospy.wait_for_message('/F1ROS/cameraL/image_raw', Image, timeout=timeout)
-                if image_data is not None:
-                    bag.write('/F1ROS/cameraL/image_raw', image_data)
+                if args.capture == 'both' or args.capture == 'images':
+                    image_data = rospy.wait_for_message('/F1ROS/cameraL/image_raw', Image, timeout=timeout)
+                    if image_data is not None:
+                        bag.write('/F1ROS/cameraL/image_raw', image_data)
+
+                if args.capture == 'both' or args.capture == 'odom':
+                    odom_data = rospy.wait_for_message('/F1ROS/odom', Odometry, timeout=timeout)
+                    if odom_data is not None:
+                        bag.write('/F1ROS/odom', odom_data)
 
         except Exception as e:
             print('Exception raised: {}'.format(e))
@@ -80,8 +166,9 @@ if __name__ == '__main__':
         output_video = None
         framerate = 10
 
+        odometry = []
         with rosbag.Bag(args.read) as bag:
-            for topic, msg, t in bag.read_messages(topics=['/F1ROS/cameraL/image_raw']):
+            for topic, msg, t in bag.read_messages():
                 if topic == '/F1ROS/cameraL/image_raw':
                     try:
                         cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
@@ -96,6 +183,13 @@ if __name__ == '__main__':
                     timestr = "%.6f" % msg.header.stamp.to_sec()
                     # print(timestr)
                     # image_name = str(save_dir)+"/"+timestr+"_left"+".pgm"
+                elif topic == '/F1ROS/odom':
+                    odometry.append(msg)
+
+            if len(odometry) > 0:
+                plot_path(odometry)
+                plot_orientation(odometry)
+                plt.show()
 
             if output_video is not None:
                 output_video.release()
