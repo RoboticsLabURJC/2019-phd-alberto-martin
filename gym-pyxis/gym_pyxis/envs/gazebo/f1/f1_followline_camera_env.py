@@ -30,6 +30,8 @@ class F1FollowLineCameraEnv(gym.Env):
         self.seed()
         self.checkpoints = {}
 
+        _ = self.f1.get_odometry()
+
     def load_checkpoints(self, filepath):
         with open(filepath, 'r') as fd:
             self.checkpoints = json.load(fd)
@@ -50,6 +52,7 @@ class F1FollowLineCameraEnv(gym.Env):
         return [seed]
 
     def reset(self):
+        self.f1.reset_world()
         self.f1.reset_simulation()
         self.f1.un_pause_physics()
         self.f1.send_velocity_command(0.0, 0.0)
@@ -77,6 +80,8 @@ class F1FollowLineCameraEnv(gym.Env):
             self.f1.send_velocity_command(0.05, -0.2)
 
         image = self.f1.get_camera_data()
+
+        # odom = self.f1.get_odometry()
 
         self.f1.pause_physics()
         reward = F1FollowLineCameraEnv._compute_reward(image)

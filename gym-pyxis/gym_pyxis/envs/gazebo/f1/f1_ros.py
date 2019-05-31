@@ -35,7 +35,7 @@ class F1(GazeboHandler):
         return cv_image
 
     @staticmethod
-    def get_odometry(timeout=5, max_retries=5):
+    def get_odometry(timeout=5, max_retries=10):
         data = None
         retry_count = 0
         while data is None:

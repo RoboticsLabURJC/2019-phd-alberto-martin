@@ -99,7 +99,7 @@ def plot_orientation(odometry):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--capture", choices=['image', 'odom', 'both'], default='both', required=False)
+    parser.add_argument("--capture", choices=['images', 'odom', 'both'], default='both', required=False)
     parser.add_argument("--read", type=str, help="Path to .bag file to read")
     parser.add_argument("--debug_video", type=str, help="Path to .bag file to read")
     args = parser.parse_args()
@@ -124,6 +124,7 @@ if __name__ == '__main__':
 
                 f1_utils.estimate_movement(np.copy(frame), np.copy(old_frame))
                 old_frame = frame
+
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
 

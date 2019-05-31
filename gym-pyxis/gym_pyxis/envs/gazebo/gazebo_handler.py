@@ -42,6 +42,7 @@ class GazeboHandler:
         self.un_pause_service = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause_service = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_service = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
+        self.reset_world_service = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
         self.set_model_state = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
 
     def reset_simulation(self):
@@ -50,6 +51,13 @@ class GazeboHandler:
             self.reset_service()
         except rospy.ServiceException as e:
             logger.warning("{}: exception raised reset simulation {}".format(self.node_name, e))
+
+    def reset_world(self):
+        rospy.wait_for_service('/gazebo/reset_world')
+        try:
+            self.reset_world_service()
+        except rospy.ServiceException as e:
+            logger.warning("{}: exception raised reset world {}".format(self.node_name, e))
 
     def pause_physics(self):
         rospy.wait_for_service('/gazebo/pause_physics')
