@@ -31,9 +31,26 @@ $ cd build
 $ cmake -jn ..
 $ sudo make install -jn
 ```
-#### Execution
+## Execution
 ```bash
 $ export LD_LIBRARY_PATH=/usr/local/lib64/:$LD_LIBRARY_PATH
 $ cd /usr/local/share/stage/worlds
 $ player simple.cfg
 ```
+
+## FAQ
+
+- Compilation error on Ubuntu 18.04. The following library is missing:
+
+  ```bash
+  /usr/bin/ld: cannot find -lgeos
+  ```
+  To solve this, install the following library:
+  
+  ```bash
+  sudo apt install libgeos++-dev
+  ```
+
+  More information about the error in [this link](https://github.com/playerproject/player/issues/18).
+  
+  
