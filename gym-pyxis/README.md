@@ -31,9 +31,40 @@ $ cd build
 $ cmake -jn ..
 $ sudo make install -jn
 ```
-#### Execution
+## Execution
 ```bash
 $ export LD_LIBRARY_PATH=/usr/local/lib64/:$LD_LIBRARY_PATH
 $ cd /usr/local/share/stage/worlds
 $ player simple.cfg
 ```
+
+## FAQ
+
+- **Player**: Compilation error on Ubuntu 18.04. The following library is missing:
+
+  ```bash
+  /usr/bin/ld: cannot find -lgeos
+  ```
+  To solve this, install the following library:
+  
+  ```bash
+  sudo apt install libgeos++-dev
+  ```
+
+  More information about the error in [this link](https://github.com/playerproject/player/issues/18).
+
+- **Stage**: Compilation error on Ubuntu 18.04. The following library is missing:
+
+  ```bash
+  Could NOT find FLTK (missing: FLTK_LIBRARIES)
+  ```
+
+  To solve this, install the following depencences:
+
+  ```bashhhhh
+  sudo apt install fltk1.3-dev
+  sudo apt install libxft-dev
+  sudo apt install libxinerama-dev
+  ```
+
+  More information about the error in [this link](https://stackoverflow.com/questions/25752961/how-to-compile-with-fltk-under-ubuntu).
