@@ -61,10 +61,37 @@ $ player simple.cfg
 
   To solve this, install the following depencences:
 
-  ```bashhhhh
+  ```bash
   sudo apt install fltk1.3-dev
   sudo apt install libxft-dev
   sudo apt install libxinerama-dev
   ```
 
   More information about the error in [this link](https://stackoverflow.com/questions/25752961/how-to-compile-with-fltk-under-ubuntu).
+
+- **Error in execution (Player)**. The terminal returns the following error:
+
+  ```bash
+  Player v.3.1.1-dev
+  
+  * Part of the Player/Stage/Gazebo Project [http://playerstage.sourceforge.net].
+  * Copyright (C) 2000 - 2013 Brian Gerkey, Richard Vaughan, Andrew Howard,
+  * Nate Koenig, and contributors. Released under the GNU General Public License.
+  * Player comes with ABSOLUTELY NO WARRANTY.  This is free software, and you
+  * are welcome to redistribute it under certain conditions; see COPYING
+  * for details.
+  
+  error   : Failed to load plugin stageplugin.
+  error   : libtool reports error: file not found
+  error   : plugin search path: /usr/local/share/stage/worlds:/usr/local/share/stage/worlds:/usr/local/lib/player-3.1/:/usr/local/lib/
+  error   : failed to load plugin: stageplugin
+  error   : failed to parse config file /usr/local/share/stage/worlds/simple.cfg driver blocks
+  ```
+
+  To solve this, change the environment variable to this one:
+
+  ```
+  export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
+  ```
+
+  The library is in `/usr/local/lib/` instead of `/usr/local/lib64/`.
